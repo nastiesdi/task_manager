@@ -8,6 +8,11 @@ class TaskList(MainClass):
         for i in task:
             self.tasks[i.uid] = i
 
+    def __str__(self):
+        for u in self.tasks.values():
+            return u.name
+
+
     def add_task(self, task):
         self.tasks[task.uid] = task
 

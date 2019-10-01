@@ -1,33 +1,36 @@
 import time
 import hashlib
+from abc import ABC
+from models.main_class import MainClass
 
 from helpers.checker import check_priority
 
 
-class Task:
-    def __init__(self, name, priority, project=None, executor=None):
+class Task(MainClass):
+    def __init__(self, name, priority, project=None, executor=None, status='to do'):
+        super().__init__()
         self.name = name
-        self.status = 'Unasigned'  # TODO: Rework status
         self.executor = executor
-        self.created_at = time.strftime('%X, %x', time.localtime())  # TODO: MAINCLASS
-        self.updated_at = 'not change'
-        if executor:
-            self.status = 'Accepted'
         self.project = project
         self.priority = priority
         self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
 
     def __str__(self):
-        if self.executor is not None:
-            return (f'1.Task name: {self.name}.\n2.Status: {self.status}.\n3.Executor: {self.executor.email}.\n'
-                f'4.Priority {self.priority}.')
-        return f'1.Task name: {self.name}.\n2.Status: {self.status}.\3.Priority {self.priority}.' #ЗАКОНЧИТЬ
+        if self.executor:
+            return (f'1.Task name: {self.name}.\n2.Status - ?\n3.Executor: {self.executor.email}.\n'
+                    f'4.Priority {self.priority}')
+        return f'1.Task name: {self.name}.\n2.Status - ?\n3.Priority {self.priority}'
 
     def show_full__info_task(self):
-        if self.executor is not None:
-            return (f'1.Task name: {self.name}.\n2.Executor: {self.executor.email}.\n3.Status: {self.status}.\n'
-                    f'4.Project: {self.project.name_project}.\n5.Priority: {self.priority}.\n6.Created at: {self.created_at}.'
-                    f'7. Updated at: {self.updated_at}')
+        a = ''
+        i = 5
+        if self.executor:
+            a = '\n' + str(i) + '.' + str(self.executor.email)
+            i += 1
+        if self.project:
+            a += '\n' + str(i) + '.' + str(self.project.name_project)
+        return f'1.Task name: {self.name}.\n2.Priority: {self.priority}.\n3.Created time: {self.created_at}.\n4' \
+               f'.Updated time: {self.updated_at}{a} '
 
     def delete_task(self, name_task):
         pass
@@ -38,19 +41,11 @@ class Task:
     def add_executor_for_task(self, dev):
         self.executor = dev
 
-    def change_task(self, task_executor=None, new_priority=None, new_status=None):
+    def change_task(self, task_executor=None, new_priority=None):
         if task_executor:
             self.executor = task_executor  # тут нужно проверить есть ли такой разработчик, а так добавление работает!!
         if check_priority(new_priority):
             self.priority = new_priority  # Super, rabotaet
-        self.updated_at = time.strftime('%X,%x', time.localtime())
-
-    # TODO: Rework
-    def change_status_task(self, new_status):
-        if new_status == 'Started' or new_status == 'Completed':
-            self.status = new_status  # Super, rabotaet
-        else:
-            return 'This status is not defined'
 
 # TODO:
 # 1. Name: Task name
