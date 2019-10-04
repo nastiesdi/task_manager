@@ -8,3 +8,6 @@ class DevList:
 
     def get_all_email(self):
         return {dev.email for dev in self.devs.values()}
+
+
+devlist = DevList
