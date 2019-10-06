@@ -1,4 +1,4 @@
-from models.main_class import MainClass
+from src.main_class import MainClass
 
 
 class TaskList(MainClass):
@@ -9,9 +9,7 @@ class TaskList(MainClass):
             self.tasks[i.uid] = i
 
     def __str__(self):
-        for u in self.tasks.values():
-            return u.name
-
+        return str({u.name for u in self.tasks.values()})
 
     def add_task(self, task):
         self.tasks[task.uid] = task

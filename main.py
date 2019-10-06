@@ -1,21 +1,36 @@
+from src.dev import Dev
+from src.dev_list import DevList
+from src.task import Task
+from src.project import Project
+from src.task_list import TaskList
+
 def main():
     """Создание объектов"""
-    print('Jcasccasca')
-
-    # project_mazad = Project('Mazad')
-    # project_bosh = Project('Bosh')
-    # dev1 = Dev('developerMitya@mail.ru', '111111', 'Oleg', 'Fomin', 22)
-    # # task1 = Task('create_database', 5, "t")
-    # # print(task1.priority_task)
-    # task2 = Task('second_task', 3, project_bosh, dev1)
-    # task3 = Task('second_task', 3, task_executor=dev1)
-    # task4 = Task('fourth', 3, task_executor=dev1)
-    # task_list = TaskList([task2, task3, task4])
+    dev1 = Dev('devSanya@mail.ru', '111111', 'Oleg', 'Fomin', 22)
+    dev2 = Dev('devNastya@mail.ru', '111111', 'Oleg', 'Fomin', 22)
+    dev3 = Dev('devDaha@mail.ru', '111111', 'Oleg', 'Fomin', 22)
+    dev4 = Dev('devYulia@mail.ru', '111111', 'Oleg', 'Fomin', 22)
+    devlist = DevList()
+    devlist.add_dev(dev1)
+    devlist.add_dev(dev2)
+    devlist.add_dev(dev3)
+    devlist.add_dev(dev4)
+    task1 = Task('create_database', 5, "t")
+    task2 = Task('second_task', 3)
+    task3 = Task('third_task', 3)
+    task4 = Task('fourth', 3)
+    project_mazad = Project('Mazad')
+    project_bosh = Project('Bosh')
+    task_list = TaskList([task2, task3, task4])
+    print(task_list)
+    dev1.add_task([task1, task2, task4, task3])
+    print(dev1)
+    print(task1.uid,task2.uid)
+    dev1.show_to_do_task()
     # print(task_list.get_all_task())
     # #          Task('five_task', 3)]
     # # task5 = [Task('seven', 3),
     # #          Task('eight', 3)]
-    # # dev2 = Dev('Nastya@mail.ru', '111111', 'Oleg', 'Fomin', 22)
     # # print(task1)
     # # print(task1.priority_task)
     # # task1.change_status_taskask('Completed')
@@ -51,9 +66,7 @@ def main():
     # print(project_bosh)
     #
     # print(Task)
-
-
-if __name__  == '__main__':
+if __name__ == '__main__':
     main()
 
 #  print(str(task1))

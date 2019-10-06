@@ -1,18 +1,22 @@
-from models.dev import Dev
-from models.project import Project
-from models.task import Task
+from src.dev import Dev
+from src.project import Project
+from src.task import Task
 from time import time
-from models.task_list import TaskList
-from models.dev_list import DevList
+from src.task_list import TaskList
+from src.dev_list import DevList
 
 
-def main():
+def main_():
     """get all task_test"""
 
-    project_bosh = Project('Bosh')
-    dev1 = Dev('developerMitya@mail.ru', '111111', 'Oleg', 'Fomin', 22)
+    # project_bosh = Project('Bosh')
+    # dev1 = Dev('developerMitya@mail.ru', '111111', 'Oleg', 'Fomin', 22)\
     #
-    # task2 = Task('second_task', 15, executor=dev1, project=project_bosh)
+    # #
+    # task2 = Task('second_task', 15, project=project_bosh)
+    # dev1.add_task(task2)
+    # print(dev1)
+
     #
     # task3 = Task('second_task', 5, executor=dev1)
     # tasklist = [task2, task3]
@@ -66,5 +70,5 @@ def main():
 
 
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+ #   main()

@@ -1,7 +1,7 @@
 import time
 import hashlib
 from abc import ABC
-from models.main_class import MainClass
+from src.main_class import MainClass
 
 from helpers.checker import check_priority
 
@@ -29,8 +29,8 @@ class Task(MainClass):
             i += 1
         if self.project:
             a += '\n' + str(i) + '.' + str(self.project.name_project)
-        return f'1.Task name: {self.name}.\n2.Priority: {self.priority}.\n3.Created time: {self.created_at}.\n4' \
-               f'.Updated time: {self.updated_at}{a} '
+        return print(f'1.Task name: {self.name}.\n2.Priority: {self.priority}.\n3.Created time: {self.created_at}.\n4'\
+               f'.Updated time: {self.updated_at}{a} ')
 
     def delete_task(self, name_task):
         pass
