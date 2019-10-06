@@ -1,8 +1,6 @@
 import hashlib
 
 from src.task_list import TaskList
-from src.dev_list import DevList
-
 
 class Dev:
     def __init__(self, email, password, first_name, second_name, age, task=[]):
@@ -15,7 +13,7 @@ class Dev:
         self.password = password
         self.first_name = first_name
         self.second_name = second_name
-        self.age = age  # TODO Rework, list_of_tasks shuld be [to do, in progress, done, resolve, Default=To do]
+        self.age = age
         self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
         if task:
             if isinstance(task, list):
@@ -72,20 +70,32 @@ class Dev:
                 self.task_done.remove_task(task_uid)
 
     def show_all_dev_task(self):
-        return print({t.name for t in self.dev_tasks.tasks.values()})
+        return print([t.name for t in self.dev_tasks.tasks.values()])
 
     def show_to_do_task(self):
-        return print({t.name for t in self.task_to_do.tasks.values()})
+        return print([t.name for t in self.task_to_do.tasks.values()])
 
     def show_in_progress_task(self):
-        return print({t.name for t in self.task_in_progress.tasks.values()})
+        return print([t.name for t in self.task_in_progress.tasks.values()])
 
     def show_resolve_task(self):
-        return print({t.name for t in self.task_resolve.tasks.values()})
+        return print([t.name for t in self.task_resolve.tasks.values()])
 
     def show_done_task(self):
-        return print({t.name for t in self.task_done.tasks.values()})
+        return print([t.name for t in self.task_done.tasks.values()])
 
-    def set_task_in_progress(self, uid):
-        self.remove_tasks(uid)
-        self.add_task(uid)
+    def set_in_progress(self, task):
+        self.remove_tasks(task.uid)
+        self.task_in_progress.add_task(task)
+
+    def set_resolve(self, task):
+        self.remove_tasks(task.uid)
+        self.task_resolve.add_task(task)
+
+    def set_done(self, task):
+        self.remove_tasks(task.uid)
+        self.task_done.add_task(task)
+
+    def set_to_do(self, task):
+        self.remove_tasks(task.uid)
+        self.task_to_do.add_task(task)

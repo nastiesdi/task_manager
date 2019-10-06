@@ -30,13 +30,7 @@ class Task(MainClass):
         if self.project:
             a += '\n' + str(i) + '.' + str(self.project.name_project)
         return print(f'1.Task name: {self.name}.\n2.Priority: {self.priority}.\n3.Created time: {self.created_at}.\n4'\
-               f'.Updated time: {self.updated_at}{a} ')
-
-    def delete_task(self, name_task):
-        pass
-
-    def print_tasks_for_project(self):
-        pass
+                     f'.Updated time: {self.updated_at}{a} ')
 
     def add_executor_for_task(self, dev):
         self.executor = dev
@@ -48,10 +42,7 @@ class Task(MainClass):
             self.priority = new_priority  # Super, rabotaet
 
 # TODO:
-# 1. Name: Task name
-# 2. Status task
-# 3. Assigne
-# 4. Priority               +
+
 #     MANAGE PROJECT:
 #   Name_project add -n 'Task' -p 6
 #   Name_projecy project -n 'pr'

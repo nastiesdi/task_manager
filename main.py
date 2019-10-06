@@ -27,49 +27,18 @@ def main():
     dev1.add_task([task1, task2, task4, task3])
     # print(dev1)
     # print(task1.uid,task2.uid)
-    m = dev1.task_to_do.tasks.get('517166fe85')
-    print(m)
-    print(dev1.task_to_do.tasks.values())
-    # dev1.show_to_do_task()
-    # print(task_list.get_all_task())
-    # #          Task('five_task', 3)]
-    # # task5 = [Task('seven', 3),
-    # #          Task('eight', 3)]
-    # # print(task1)
-    # # print(task1.priority_task)
-    # # task1.change_status_taskask('Completed')
-    # # print(str(task2))
+    """Вопрос пор добавления таск по юиду"""
+    # n = {}
+    # # m = dev1.task_to_do.tasks.get('517166fe85')
+    # # n[1] = m
+    # print(type(m))
+    # print(n)
+    my_list = DevList()
+    my_list.add_dev([dev1, dev3])
+
+    print(my_list) #Узнать у Саши в чем проблема, а-то уже спит наверное)
 
 
-
-
-    # """использование методов"""
-    # task1.change_status_task('Close')
-    # task1.change_priority_task(2)
-    # dev1.add_task(task2)
-    # dev1.add_task(task3)
-    # dev1.add_task(task5)
-    # print(dev1)# если мы прописываем переменную задачи при создании, то выводится обработанная информация,
-    # # если добавляем - то ссылка на объект
-    # #print(task1)
-    # print(dev1.show_all_dev_task())
-    # task2.add_executor_for_task(dev1)
-    # print(task2)
-    # dev1.add_task(task4)
-    # project_bosh.add_task_to_project(task4)
-    # print(project_bosh.task)
-    # project_bosh.add_task_to_project(task1)
-    # print(dev1.task)
-    # print(project_bosh.task) #выводятся ссылки на объекты, а хочу чтобы обрабатывались
-    #
-    # #<test> add tast to project
-    #
-    # project_bosh.add_task_to_project(task4)
-    # print(project_bosh.task)
-    # project_bosh.add_task_to_project(task1)
-    # print(project_bosh)
-    #
-    # print(Task)
 if __name__ == '__main__':
     main()
 
