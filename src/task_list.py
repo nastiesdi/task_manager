@@ -13,6 +13,9 @@ class TaskList(MainClass):
 
     def add_task(self, task):
         self.tasks[task.uid] = task
+        # m = self.tasks.get(uid)
+        # self.tasks[uid] = m
+        # print(type(m))
 
     def remove_task(self, uid):
         del self.tasks[uid]

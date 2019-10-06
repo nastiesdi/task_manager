@@ -30,8 +30,8 @@ class Dev:
         output_tasks = ' '
         for i in self.dev_tasks.tasks.values():
             output_tasks += str(i.name) + ', '
-        return f'1.Developer mail: {self.email},\n2.First name:{self.first_name},'\
-            f'\n3.Second name: {self.second_name},\n4.Age: {self.age},\n5.Tasks:{output_tasks.rstrip(", ")}'
+        return f'1.Developer mail: {self.email},\n2.First name:{self.first_name},' \
+               f'\n3.Second name: {self.second_name},\n4.Age: {self.age},\n5.Tasks:{output_tasks.rstrip(", ")}'
 
     def change_email(self, newemail):
         self.email = newemail
@@ -88,5 +88,4 @@ class Dev:
 
     def set_task_in_progress(self, uid):
         self.remove_tasks(uid)
-        self.add_task()
-        pass #мне это нужно делать или вызывать функцию таск листа?
+        self.add_task(uid)
