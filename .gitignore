@@ -6,3 +6,7 @@ __pycache__/
 # C extensions
 *.so
 
+# IntelliJ project files
+.idea
+*.iml
+out
