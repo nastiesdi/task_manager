@@ -50,5 +50,7 @@ def main():
     print(task1.trek_time)
 
 
+
+
 if __name__ == '__main__':
     main()
