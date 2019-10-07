@@ -1,8 +1,11 @@
+from time import sleep
+
 from src.dev import Dev
 from src.dev_list import DevList
 from src.task import Task
 from src.project import Project
 from src.task_list import TaskList
+
 
 def main():
     """Создание объектов"""
@@ -19,29 +22,33 @@ def main():
     task2 = Task('second_task', 3)
     task3 = Task('third_task', 3)
     task4 = Task('fourth', 3)
-    # print(task1.uid)
+    task4.get_time()
     project_mazad = Project('Mazad')
     project_bosh = Project('Bosh')
     task_list = TaskList([task2, task3, task4])
-    # print(task_list)
-    dev1.add_task([task1, task2, task4, task3])
-    # print(dev1)
-    # print(task1.uid,task2.uid)
-    """Вопрос пор добавления таск по юиду"""
-    # n = {}
-    # # m = dev1.task_to_do.tasks.get('517166fe85')
-    # # n[1] = m
-    # print(type(m))
-    # print(n)
-    my_list = DevList()
-    my_list.add_dev([dev1, dev3])
+    # dev1.add_task([task1, task2, task4])
 
-    print(my_list) #Узнать у Саши в чем проблема, а-то уже спит наверное)
+    """trecker test"""
+    dev1.set_to_do(task1)
+    sleep(3)
+    print(task1.trek_time)
+    dev1.set_in_progress(task1)
+    print(task1.updated_at)
+    print(task1.trek_time)
+    sleep(4)
+    dev1.set_to_do(task1)
+    print(task1.updated_at)
+    print('tut')
+    print(task1.trek_time)
+    sleep(3)
+    print(task1.trek_time)
+    print(task1.updated_at)
+    dev1.set_in_progress(task1)
+    sleep(5)
+    dev1.set_resolve(task1)
+    print('tut')
+    print(task1.trek_time)
 
 
 if __name__ == '__main__':
     main()
-
-#  print(str(task1))
-# print("\n", task1, "\n", task2, "\n", task3, "\n", dev1)
-#   dev1.add_task(task1)
