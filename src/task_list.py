@@ -6,7 +6,7 @@ class TaskList(MainClass):
         super().__init__()
         self.tasks = dict()
         for i in task:
-            self.tasks[i.uid] = i
+            self.add_task(i)
 
     def __str__(self):
         return str({u.name for u in self.tasks.values()})

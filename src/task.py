@@ -1,4 +1,4 @@
-import time
+import datetime
 import hashlib
 from abc import ABC
 from src.main_class import MainClass
@@ -13,6 +13,8 @@ class Task(MainClass):
         self.executor = executor
         self.project = project
         self.priority = priority
+        self.trek_time = datetime.timedelta()
+        self.status = 'to do'
         self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
 
     def __str__(self):
@@ -34,12 +36,33 @@ class Task(MainClass):
 
     def add_executor_for_task(self, dev):
         self.executor = dev
+        self.update_time()
 
     def change_task(self, task_executor=None, new_priority=None):
         if task_executor:
             self.executor = task_executor  # тут нужно проверить есть ли такой разработчик, а так добавление работает!!
         if check_priority(new_priority):
-            self.priority = new_priority  # Super, rabotaet
+            self.priority = new_priority
+
+    def change_status_on_to_do(self):
+        self.status = 'to do'
+        self.update_time()
+
+    # def trake_time(self):
+    #     temp_time = self.created_at if self.updated_at == 'Not changed' else self.updated_at
+    #     self.update_time()
+    #     self.trek_time += self.updated_at - temp_time
+
+    def change_status_on_in_progress(self):
+        self.status = 'in progress'
+        self.update_time()
+
+    def change_status_on_resolve(self):
+        self.status = 'in resolve'
+
+    def change_status_on_done(self):
+        self.status = 'done'
+
 
 # TODO:
 

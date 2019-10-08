@@ -13,4 +13,4 @@ class DevList:
             self.devs[dev.uid] = dev
 
     def get_all_email(self):
-        return print({dev.email for dev in self.devs.values()}) # каk он понимает что есть майл у дева если нет импорта
+        print([dev.email for dev in self.devs.values()])
