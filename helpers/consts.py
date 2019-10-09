@@ -1,4 +1,3 @@
 ACCEPTED = 'Accepted'
 
-STATUS_LIST = {'Accepted': 'Accepted', 'Assign': 'Assign'}
-
+STATUS_LIST = {'to do': 'to do', 'in progress': 'in progress', 'resolve': 'resolve', 'done': 'done'}
