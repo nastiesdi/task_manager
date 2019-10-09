@@ -70,19 +70,19 @@ class Dev:
                 self.task_done.remove_task(task_uid)
 
     def show_all_dev_task(self):
-        print([t.name for t in self.all_tasks])
+        return str([t.name for t in self.all_tasks])
 
     def show_to_do_task(self):
-        print([t.name for t in self.task_to_do.tasks.values()])
+        return str([t.name for t in self.task_to_do.tasks.values()])
 
     def show_in_progress_task(self):
-        print([t.name for t in self.task_in_progress.tasks.values()])
+        return str([t.name for t in self.task_in_progress.tasks.values()])
 
     def show_resolve_task(self):
-        print([t.name for t in self.task_resolve.tasks.values()])
+        return str([t.name for t in self.task_resolve.tasks.values()])
 
     def show_done_task(self):
-        print([t.name for t in self.task_done.tasks.values()])
+        return str([t.name for t in self.task_done.tasks.values()])
 
     def set_in_progress(self, task):
         task.change_status_on_in_progress()
@@ -96,7 +96,6 @@ class Dev:
             task.trek_time += task.updated_at - temp_time
         self.remove_tasks(task.uid)
         self.task_resolve.add_task(task)
-
 
     def set_done(self, task):
         self.remove_tasks(task.uid)

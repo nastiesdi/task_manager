@@ -1,8 +1,9 @@
 import datetime
 import hashlib
 from abc import ABC
-from src.main_class import MainClass
 
+from helpers.consts import STATUS_LIST
+from src.main_class import MainClass
 from helpers.checker import check_priority
 
 
@@ -45,7 +46,7 @@ class Task(MainClass):
             self.priority = new_priority
 
     def change_status_on_to_do(self):
-        self.status = 'to do'
+        self.status = STATUS_LIST['to do']
         self.update_time()
 
     # def trake_time(self):
@@ -54,14 +55,14 @@ class Task(MainClass):
     #     self.trek_time += self.updated_at - temp_time
 
     def change_status_on_in_progress(self):
-        self.status = 'in progress'
+        self.status = STATUS_LIST['in progress']
         self.update_time()
 
     def change_status_on_resolve(self):
-        self.status = 'in resolve'
+        self.status = STATUS_LIST['resolve']
 
     def change_status_on_done(self):
-        self.status = 'done'
+        self.status = STATUS_LIST['done']
 
 
 # TODO:
