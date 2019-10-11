@@ -14,4 +14,4 @@ class MainClass(ABC):
         return f'{self.created_at}, {self.updated_at}'
 
     def get_time(self):
-        print(f'created at: {self.created_at}, updated_at: {self.updated_at}')
+        return f'created at: {self.created_at}, updated_at: {self.updated_at}'
