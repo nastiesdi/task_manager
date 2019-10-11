@@ -2,13 +2,14 @@ import datetime
 import hashlib
 from abc import ABC
 
+from src.task_list import TaskList
 from helpers.consts import STATUS_LIST
 from src.main_class import MainClass
 from helpers.checker import check_priority
 
 
 class Task(MainClass):
-    def __init__(self, name, priority, project=None, executor=None, status='to do'):
+    def __init__(self, name, priority, project=None, executor=None, status='to do', sub_tasks=None):
         super().__init__()
         self.name = name
         self.executor = executor
@@ -16,13 +17,50 @@ class Task(MainClass):
         self.priority = priority
         self.trek_time = datetime.timedelta()
         self.status = 'to do'
+        self.sub_tasks = {}
+        self.name_sub_tasks = []
         self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
 
     def __str__(self):
         if self.executor:
             return (f'1.Task name: {self.name}.\n2.Status - ?\n3.Executor: {self.executor.email}.\n'
                     f'4.Priority {self.priority}')
-        return f'1.Task name: {self.name}.\n2.Status - ?\n3.Priority {self.priority}'
+        return f'1.Task name: {self.name}.\n2.Status - ?\n3.Priority {self.priority}{self.sub_tasks}'
+
+    def add_sub_tasks(self, new_sub_task):
+        self.sub_tasks[new_sub_task.uid] = new_sub_task
+
+    # def show_all_sub_tasks(self):
+    #     for sub_task in self.sub_tasks.values():
+    #         self.name_sub_tasks.append(sub_task.name)
+    #         if sub_task.sub_tasks:
+    #             sub_task.show_all_sub_tasks()
+    #     print(self.name_sub_tasks)
+
+    def show_all_sub_tasks(self):
+        self.name_sub_tasks = []
+        for sub_task in self.sub_tasks.values():
+            self.name_sub_tasks.append(sub_task.name)
+            if sub_task.sub_tasks:
+                sub_task.show_all_sub_tasks()
+        # for sub_task in self.sub_tasks.values():
+        print(f' - {self.name} : {self.name_sub_tasks}')
+
+    def show_sub_tasks(self):
+        self.name_sub_tasks = []
+        for sub_task in self.sub_tasks.values():
+            self.name_sub_tasks.append(sub_task.name)
+        return f'Subtasks for {self.name} : {self.name_sub_tasks}'
+
+    def remove_one_subtask(self, task):
+        self.remove_all_tasks_subtasks(task)
+        del self.sub_tasks[task.uid]
+
+    def remove_all_tasks_subtasks(self, task):
+        if task.sub_tasks:
+            for i in list(task.sub_tasks.values()):
+                del task.sub_tasks[i.uid]
+                return task.remove_all_tasks_subtasks(i)
 
     def show_full__info_task(self):
         a = ''
@@ -33,7 +71,7 @@ class Task(MainClass):
         if self.project:
             a += '\n' + str(i) + '.' + str(self.project.name_project)
         return print(f'1.Task name: {self.name}.\n2.Priority: {self.priority}.\n3.Created time: {self.created_at}.\n4'\
-                     f'.Updated time: {self.updated_at}{a} ')
+                     f'.Updated time: {self.updated_at}{a}')
 
     def add_executor_for_task(self, dev):
         self.executor = dev
