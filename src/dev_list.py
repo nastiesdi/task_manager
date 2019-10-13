@@ -1,5 +1,10 @@
-class DevList:
+from src.main_class import MainClass
+from reformat import str_
+
+
+class DevList(MainClass):
     def __init__(self):
+        super().__init__()
         self.devs = dict()
 
     def add_dev(self, dev):
@@ -13,7 +18,8 @@ class DevList:
         a = []
         for dev in self.devs.values():
             a.append(str(dev.email).strip("\'"))
-        return 'Our developer: \n' + str(list(zip(range(1, len(self.devs)+1), a))).replace("'", "").replace("),", "\n").replace("(", "").replace(",",":").replace("[", " ").replace(")]", " ")
+        return 'Our developer: \n' + str_(list(zip(self.get_len_str(self.devs), a))).create_list_vision()
 
     def get_all_email(self):
-        print([dev.email for dev in self.devs.values()])
+        a = [dev.email for dev in self.devs.values()]
+        return 'Our developer: \n' + str_(list(zip(self.get_len_str(self.devs), a))).create_list_vision()

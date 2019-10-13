@@ -1,10 +1,12 @@
 import hashlib
 
 from src.task_list import TaskList
+from src.main_class import MainClass
 
 
-class Dev:
+class Dev(MainClass):
     def __init__(self, email, password, first_name, last_name, age, task=[]):
+        super().__init__()
         self.all_tasks = TaskList({})
         self.task_in_progress = TaskList({})
         self.task_resolve = TaskList({})
@@ -24,7 +26,6 @@ class Dev:
             else:
                 self.all_tasks.add_task(task)
                 self.task_to_do.add_task(task)
-        # self.all_tasks_tupl = tuple(t for t in self.all_tasks.tasks)
 
     def __str__(self):
         output_tasks = ' '
@@ -39,7 +40,7 @@ class Dev:
     def check_password(self, my_password):
         return self.password == my_password
 
-    def change_password(self,old_password, new_password):
+    def change_password(self, old_password, new_password):
         if self.check_password(old_password):
             self.password = new_password
         else:
@@ -119,7 +120,4 @@ class Dev:
             task.change_status_on_to_do()
             task.trek_time += task.updated_at - temp_time
         self.remove_tasks(task)
-        self.task_to_do.add_task(task) # Добавить ексепшен
-
-
-
+        self.task_to_do.add_task(task)  # Добавить ексепшен

@@ -1,8 +1,10 @@
 from src.task import Task
+from src.main_class import MainClass
+from reformat import str_
 
-
-class Project:
-    def __init__(self, name_project, task=None, dev=None):
+class Project(MainClass):
+    def __init__(self, name_project, task=[], dev=None):
+        super().__init__()
         self.name_project = name_project
         self.task = task
         self.dev = dev
@@ -11,7 +13,7 @@ class Project:
         return f'Name project: {self.name_project}'
 
     def add_task_to_project(self, task):
-        self.task = Project.task
+        # self.task = Project.task
         if isinstance(task, list):
             for i in task:
                 self.task.append(i)
@@ -19,6 +21,7 @@ class Project:
             self.task.append(task)  # rabotaet
 
     def print_all_task(self):
-        if Task.project_for_task == Project:
-            return f'{self.task_name}'
-        pass
+        if isinstance(self, Project):
+            tasks = [r.name for r in self.task]
+        return f'All task for project {self.name_project}: \n' + str_(list(zip(self.get_len_str(self.task), tasks))).create_list_vision()
+

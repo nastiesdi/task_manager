@@ -24,7 +24,7 @@ class TaskList(MainClass):
         return a
 
     def sort_priority_task(self):
-        sorted_task_list = [task[1] for task in sorted(self.tasks.items(), key=lambda x: x[1].priority_task)]
+        sorted_task_list = [task[1] for task in sorted(self.tasks.items(), key=lambda x: x[1].priority)]
         k = ''
         for task in sorted_task_list:
             k += ''.join(str(task) + '\n')
