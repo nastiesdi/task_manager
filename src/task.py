@@ -1,14 +1,14 @@
 import datetime
 import hashlib
-from abc import ABC
 
 from helpers.consts import STATUS_LIST
+from reformat import str_
 from src.main_class import MainClass
 from helpers.checker import check_priority
 
 
 class Task(MainClass):
-    def __init__(self, name, priority, project=None, executor=None, status='to do'):
+    def __init__(self, name, priority, project=None, executor=None, status='to do', sub_tasks=None):
         super().__init__()
         self.name = name
         self.executor = executor
@@ -16,6 +16,8 @@ class Task(MainClass):
         self.priority = priority
         self.trek_time = datetime.timedelta()
         self.status = 'to do'
+        self.sub_tasks = {}
+        self.name_sub_tasks = []
         self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
 
     def __str__(self):
@@ -24,19 +26,50 @@ class Task(MainClass):
                     f'4.Priority {self.priority}')
         return f'1.Task name: {self.name}.\n2.Status - ?\n3.Priority {self.priority}'
 
+    def add_sub_tasks(self, new_sub_task):
+        if isinstance(new_sub_task, list):
+            for task in new_sub_task:
+                self.sub_tasks[task.uid] = task
+        else:
+            self.sub_tasks[new_sub_task.uid] = new_sub_task
+
+    def show_all_sub_tasks(self):
+        self.name_sub_tasks = []
+        for sub_task in self.sub_tasks.values():
+            self.name_sub_tasks.append(sub_task.name)
+            if sub_task.sub_tasks:
+                sub_task.show_all_sub_tasks()
+        # for sub_task in self.sub_tasks.values():
+        print(f' - {self.name} : {self.name_sub_tasks}')
+
+    def show_sub_tasks(self):
+        self.name_sub_tasks = []
+        for sub_task in self.sub_tasks.values():
+            self.name_sub_tasks.append(sub_task.name)
+        return f'Subtasks for {self.name} : {self.name_sub_tasks}'
+
+    def remove_subtask(self, task):
+        self.remove_all_subt_not_use(task)
+        del self.sub_tasks[task.uid]
+
+    def remove_all_subt_not_use(self, task):
+        if task.sub_tasks:
+            for i in list(task.sub_tasks.values()):
+                del task.sub_tasks[i.uid]
+                task.remove_all_subt_not_use(i)
+
     def show_full__info_task(self):
-        a = ''
-        i = 5
-        if self.executor:
-            a = '\n' + str(i) + '.' + str(self.executor.email)
-            i += 1
-        if self.project:
-            a += '\n' + str(i) + '.' + str(self.project.name_project)
-        return print(f'1.Task name: {self.name}.\n2.Priority: {self.priority}.\n3.Created time: {self.created_at}.\n4'\
-                     f'.Updated time: {self.updated_at}{a} ')
+        n = [self.name, self.priority, self.created_at, self.updated_at, self.executor.email, self.project.name_project]
+        b = ['name', 'priority', 'created_at', 'updated_at', 'executor', 'project']
+        r = (list(zip(self.get_len_str(n), b)))
+        return 'full info task: \n' + str_(list(zip(r, n))).create_list_vision()
 
     def add_executor_for_task(self, dev):
         self.executor = dev
+        self.update_time()
+
+    def add_project_for_task(self, project):
+        self.project = project
         self.update_time()
 
     def change_task(self, task_executor=None, new_priority=None):
@@ -48,11 +81,6 @@ class Task(MainClass):
     def change_status_on_to_do(self):
         self.status = STATUS_LIST['to do']
         self.update_time()
-
-    # def trake_time(self):
-    #     temp_time = self.created_at if self.updated_at == 'Not changed' else self.updated_at
-    #     self.update_time()
-    #     self.trek_time += self.updated_at - temp_time
 
     def change_status_on_in_progress(self):
         self.status = STATUS_LIST['in progress']

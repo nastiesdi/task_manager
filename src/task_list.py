@@ -14,8 +14,8 @@ class TaskList(MainClass):
     def add_task(self, task):
         self.tasks[task.uid] = task
 
-    def remove_task(self, uid):
-        del self.tasks[uid]
+    def remove_task(self, task):
+        del self.tasks[task.uid]
 
     def get_all_task(self):
         a = ''
@@ -24,7 +24,7 @@ class TaskList(MainClass):
         return a
 
     def sort_priority_task(self):
-        sorted_task_list = [task[1] for task in sorted(self.tasks.items(), key=lambda x: x[1].priority_task)]
+        sorted_task_list = [task[1] for task in sorted(self.tasks.items(), key=lambda x: x[1].priority)]
         k = ''
         for task in sorted_task_list:
             k += ''.join(str(task) + '\n')
