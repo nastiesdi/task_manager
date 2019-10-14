@@ -1,6 +1,5 @@
-from src.task import Task
 from src.main_class import MainClass
-from reformat import str_
+from helpers.reformat import create_list_vision
 
 class Project(MainClass):
     def __init__(self, name_project, task=[], dev=None):
@@ -23,5 +22,5 @@ class Project(MainClass):
     def print_all_task(self):
         if isinstance(self, Project):
             tasks = [r.name for r in self.task]
-        return f'All task for project {self.name_project}: \n' + str_(list(zip(self.get_len_str(self.task), tasks))).create_list_vision()
+        return f'All task for project {self.name_project}: \n' + create_list_vision(str(list(zip(self.get_len_str(self.task), tasks))))
 

@@ -1,5 +1,5 @@
 from src.main_class import MainClass
-from reformat import str_
+from helpers.reformat import create_list_vision
 
 
 class DevList(MainClass):
@@ -18,8 +18,8 @@ class DevList(MainClass):
         a = []
         for dev in self.devs.values():
             a.append(str(dev.email).strip("\'"))
-        return 'Our developer: \n' + str_(list(zip(self.get_len_str(self.devs), a))).create_list_vision()
+        return 'Our developer: \n' + create_list_vision(str(list(zip(self.get_len_str(self.devs), a))))
 
     def get_all_email(self):
         a = [dev.email for dev in self.devs.values()]
-        return 'Our developer: \n' + str_(list(zip(self.get_len_str(self.devs), a))).create_list_vision()
+        return 'Our developer: \n' + create_list_vision(str(list(zip(self.get_len_str(self.devs), a))))
