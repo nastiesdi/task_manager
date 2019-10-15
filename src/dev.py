@@ -32,7 +32,7 @@ class Dev(MainClass):
         for i in self.all_tasks.tasks.values():
             output_tasks += str(i.name) + ', '
         return f'1.Developer mail: {self.email},\n2.First name:{self.first_name},' \
-               f'\n3.Second name: {self.second_name},\n4.Age: {self.age},\n5.Tasks:{str(self.all_tasks).strip("{}")}'
+               f'\n3.Second name: {self.second_name},\n4.Age: {self.age},\n5.Tasks:\n{str(self.all_tasks)}'
 
     def change_email(self, new_email):
         self.email = new_email
@@ -119,4 +119,4 @@ class Dev(MainClass):
             task.change_status_on_to_do()
             task.trek_time += task.updated_at - temp_time
         self.remove_tasks(task)
-        self.task_to_do.add_task(task)  # Добавить ексепшен
+        self.task_to_do.add_task(task)

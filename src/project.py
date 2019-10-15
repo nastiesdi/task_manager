@@ -1,5 +1,4 @@
 from src.main_class import MainClass
-from helpers.reformat import create_list_display
 
 
 class Project(MainClass):
@@ -21,7 +20,9 @@ class Project(MainClass):
             self.task.append(task)  # rabotaet
 
     def print_all_task(self):
-        if isinstance(self, Project):
-            tasks = [r.name for r in self.task]
-        return 'All task : \n' + create_list_display(tasks)
+        display = 'All task:\n'
+        for i, j in enumerate([r.name for r in self.task], start=1):
+            display += str(i) + ': ' + str(j) + '\n'
+        return display
+
 

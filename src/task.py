@@ -1,8 +1,8 @@
 import datetime
 import hashlib
+import re
 
 from helpers.consts import STATUS_LIST
-from helpers.reformat import create_list_display
 from src.main_class import MainClass
 from helpers.checker import check_priority
 
@@ -31,7 +31,7 @@ class Task(MainClass):
         #     if value.values():
         #         update_value[val.key] = val.values()
         # return try_it(value)
-        #это в работе
+#TODO это в работе, discuss
 
 
     def add_sub_tasks(self, new_sub_task):
@@ -47,14 +47,23 @@ class Task(MainClass):
             self.name_sub_tasks.append(sub_task.name)
             if sub_task.sub_tasks:
                 sub_task.show_all_sub_tasks()
+                continue
+        print(f' - {self.name}: ' + str(self.name_sub_tasks).strip("[]").replace("'", ''))
+        # TODO
+        # name_sub_tasks = []
+        # name_sub = ''
         # for sub_task in self.sub_tasks.values():
-        print(f' - {self.name} : {self.name_sub_tasks}')
+        #     name_sub_tasks.append(sub_task.name)
+        #     if sub_task.sub_tasks:
+        #         sub_task.show_all_sub_tasks()
+        #     name_sub += f' - {self.name}: ' + str(name_sub_tasks).strip("[]").replace("'", '')
+        # return name_sub
 
     def show_sub_tasks(self):
         self.name_sub_tasks = []
         for sub_task in self.sub_tasks.values():
             self.name_sub_tasks.append(sub_task.name)
-        return f'Subtasks for {self.name} : {self.name_sub_tasks}'
+        return str(self.name_sub_tasks).strip("[]").replace("'", '')
 
     def remove_subtask(self, task):
         self.remove_all_subt_not_use(task)
@@ -68,9 +77,11 @@ class Task(MainClass):
 
     def show_full__info_task(self):
         n = [self.name, self.priority, self.created_at, self.updated_at, self.executor.email, self.project.name_project]
-        b = ['name', 'priority', 'created_at', 'updated_at', 'executor', 'project']
-        res = list(zip(b, n))
-        return 'full info task: \n' + create_list_display(res)
+        b = ['name: ', 'priority: ', 'created_at: ', 'updated_at: ', 'executor: ', 'project: ']
+        display = 'Full info tasks:\n'
+        for i, j in enumerate(list(zip(b, n)), start=1):
+            display += str(i) + '.' + re.sub(r'[,()\']', '', str(j)) + '\n'
+        return display
 
     def add_executor_for_task(self, dev):
         self.executor = dev

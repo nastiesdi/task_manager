@@ -9,7 +9,11 @@ class TaskList(MainClass):
             self.add_task(i)
 
     def __str__(self):
-        return str({u.name for u in self.tasks.values()})
+        # return str({u.name for u in self.tasks.values()})
+        display = ''
+        for i, j in enumerate([r.name for r in self.tasks.values()], start=1):
+            display += str(i) + ': ' + str(j) + '\n'
+        return display
 
     def add_task(self, task):
         self.tasks[task.uid] = task
