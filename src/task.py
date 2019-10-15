@@ -2,7 +2,7 @@ import datetime
 import hashlib
 
 from helpers.consts import STATUS_LIST
-from helpers.reformat import create_list_vision
+from helpers.reformat import create_list_display
 from src.main_class import MainClass
 from helpers.checker import check_priority
 
@@ -25,6 +25,14 @@ class Task(MainClass):
             return (f'1.Task name: {self.name}.\n2.Status - ?\n3.Executor: {self.executor.email}.\n'
                     f'4.Priority {self.priority}')
         return f'1.Task name: {self.name}.\n2.Status - ?\n3.Priority {self.priority}'
+        update_value = {}
+        # value = {'name' : self.name, 'email': self.executor.email, 'priority': self.priority, 'project': self.project}
+        # for val in value.items():
+        #     if value.values():
+        #         update_value[val.key] = val.values()
+        # return try_it(value)
+        #это в работе
+
 
     def add_sub_tasks(self, new_sub_task):
         if isinstance(new_sub_task, list):
@@ -61,8 +69,8 @@ class Task(MainClass):
     def show_full__info_task(self):
         n = [self.name, self.priority, self.created_at, self.updated_at, self.executor.email, self.project.name_project]
         b = ['name', 'priority', 'created_at', 'updated_at', 'executor', 'project']
-        r = (list(zip(self.get_len_str(n), b)))
-        return 'full info task: \n' + create_list_vision(str(list(zip(r, n))))
+        res = list(zip(b, n))
+        return 'full info task: \n' + create_list_display(res)
 
     def add_executor_for_task(self, dev):
         self.executor = dev

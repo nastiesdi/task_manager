@@ -17,7 +17,5 @@ class MainClass(ABC):
     def get_time(self):
         return f'created at: {self.created_at}, updated_at: {self.updated_at}'
 
-    def get_len_str(self, field):
-        self.m = list(range(1, len(field) + 1))
-        return self.m
+
 

@@ -34,8 +34,8 @@ class Dev(MainClass):
         return f'1.Developer mail: {self.email},\n2.First name:{self.first_name},' \
                f'\n3.Second name: {self.second_name},\n4.Age: {self.age},\n5.Tasks:{str(self.all_tasks).strip("{}")}'
 
-    def change_email(self, newemail):
-        self.email = newemail
+    def change_email(self, new_email):
+        self.email = new_email
 
     def check_password(self, my_password):
         return self.password == my_password
@@ -55,7 +55,7 @@ class Dev(MainClass):
             self.all_tasks.add_task(task)
             self.task_to_do.add_task(task)
 
-    def remove_task_absolut(self, task):
+    def remove_task_absolutly(self, task):
         self.remove_tasks(task)
         self.all_tasks.remove_task(task)
 
@@ -114,7 +114,6 @@ class Dev(MainClass):
         task.change_status_on_done()
 
     def set_to_do(self, task):
-        # task.trake_time()
         if task in self.task_in_progress.tasks.values():
             temp_time = task.created_at if task.updated_at == 'Not changed' else task.updated_at
             task.change_status_on_to_do()
