@@ -1,5 +1,5 @@
 from src.main_class import MainClass
-from helpers.reformat import try_it
+from helpers.reformat import create_list_display
 
 
 class Project(MainClass):
@@ -23,5 +23,5 @@ class Project(MainClass):
     def print_all_task(self):
         if isinstance(self, Project):
             tasks = [r.name for r in self.task]
-        return 'All task : \n' + try_it(tasks)
+        return 'All task : \n' + create_list_display(tasks)
 

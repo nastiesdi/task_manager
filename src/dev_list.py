@@ -1,6 +1,5 @@
 from src.main_class import MainClass
-from helpers.reformat import create_list_vision
-from helpers.reformat import  try_it
+from helpers.reformat import create_list_display
 
 
 class DevList(MainClass):
@@ -17,8 +16,8 @@ class DevList(MainClass):
 
     def __str__(self):
         a = [dev.email for dev in self.devs.values()]
-        return 'Our developer: \n' + try_it(a)
+        return 'Our developer: \n' + create_list_display(a)
 
     def get_all_email(self):
         a = [dev.email for dev in self.devs.values()]
-        return 'Our developer: \n' + try_it(a)
+        return 'Our developer: \n' + create_list_display(a)
