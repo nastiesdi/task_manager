@@ -43,7 +43,7 @@ def main():
     dev1.add_task([task1, task2, task6, task7, task8, task9, task10])
     print(dev1)
     print('\n Remove devs task: "add_field_task2"')
-    dev1.remove_task_absolut(task2)
+    dev1.remove_task_absolutly(task2)
     print(dev1)
     print('\nShow all dev tasks')
     print(dev1.show_all_dev_task())
@@ -76,11 +76,10 @@ def main():
     task1.remove_subtask(task3)
     print('Remove add_field_task3. All tasks: ')
     task1.show_all_sub_tasks()
-    print('\nFull task info')
     task1.add_executor_for_task(dev1)
     task1.add_project_for_task(project_bosh)
-    print(task1.show_full__info_task())
-    print('\nChange task')
+    print('\n' + str(task1.show_full__info_task()))
+    print('\nChange task\n')
     task1.change_task(task_executor=dev2, new_priority=2)
     print(task1.show_full__info_task())
     all_devs = DevList()
@@ -89,7 +88,8 @@ def main():
     print(all_devs.get_all_email())
     project_bosh.add_task_to_project([task1, task2, task3, task4])
     print('\n' + str(project_bosh.print_all_task()))
-    print(task1.show_full__info_task())
+    print('\n' + str(task1.show_full__info_task()))
+
 
 if __name__ == '__main__':
     main()
