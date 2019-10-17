@@ -15,24 +15,28 @@ class Dev(MainClass):
         self.email = email
         self.password = password
         self.first_name = first_name
-        self.second_name = last_name
+        self.last_name = last_name
         self.age = age
         self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
         if task:
             if isinstance(task, list):
-                for t in task:
-                    self.all_tasks.add_task(t)
-                    self.task_to_do.add_task(t)
+                for one in task:
+                    self.all_tasks.add_task(one)
+                    self.task_to_do.add_task(one)
             else:
                 self.all_tasks.add_task(task)
                 self.task_to_do.add_task(task)
 
     def __str__(self):
-        output_tasks = ' '
-        for i in self.all_tasks.tasks.values():
-            output_tasks += str(i.name) + ', '
-        return f'1.Developer mail: {self.email},\n2.First name:{self.first_name},' \
-               f'\n3.Second name: {self.second_name},\n4.Age: {self.age},\n5.Tasks:{str(self.all_tasks).strip("{}")}'
+        task_info_list = []
+        key_output_list = ['email', 'first_name', 'last_name', 'task', 'age']
+        for key in self.__dict__.keys():
+            if key in key_output_list and self.__dict__[key]:
+                task_info_list.append(str(key) + ': ' + str(self.__dict__[key]))
+        display = 'Dev:\n'
+        for i, j in enumerate(task_info_list, start=1):
+            display += str(i) + '.' + str(j) + '\n'
+        return display
 
     def change_email(self, new_email):
         self.email = new_email
@@ -48,14 +52,14 @@ class Dev(MainClass):
 
     def add_task(self, task):
         if isinstance(task, list):
-            for t in task:
-                self.all_tasks.add_task(t)
-                self.task_to_do.add_task(t)
+            for one in task:
+                self.all_tasks.add_task(one)
+                self.task_to_do.add_task(one)
         else:
             self.all_tasks.add_task(task)
             self.task_to_do.add_task(task)
 
-    def remove_task_absolutly(self, task):
+    def remove_task_absolutely(self, task):
         self.remove_tasks(task)
         self.all_tasks.remove_task(task)
 
@@ -79,21 +83,6 @@ class Dev(MainClass):
                 self.task_resolve.remove_task(task)
             if task.uid in self.task_done.tasks:
                 self.task_done.remove_task(task)
-
-    def show_all_dev_task(self):
-        return str([t.name for t in self.all_tasks.tasks.values()])
-
-    def show_to_do_task(self):
-        return str([t.name for t in self.task_to_do.tasks.values()])
-
-    def show_in_progress_task(self):
-        return str([t.name for t in self.task_in_progress.tasks.values()])
-
-    def show_resolve_task(self):
-        return str([t.name for t in self.task_resolve.tasks.values()])
-
-    def show_done_task(self):
-        return str([t.name for t in self.task_done.tasks.values()])
 
     def set_in_progress(self, task):
         task.change_status_on_in_progress()
@@ -119,4 +108,4 @@ class Dev(MainClass):
             task.change_status_on_to_do()
             task.trek_time += task.updated_at - temp_time
         self.remove_tasks(task)
-        self.task_to_do.add_task(task)  # Добавить ексепшен
+        self.task_to_do.add_task(task)
