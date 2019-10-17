@@ -17,8 +17,8 @@ class DevList(MainClass):
 
     def __str__(self):
         display = 'All dev:\n'
-        for i, j in enumerate([dev.email for dev in self.devs.values()], start=1):
-            display += str(i) + ': ' + str(j) + '\n'
+        for num, email in enumerate([dev.email for dev in self.devs.values()], start=1):
+            display += str(num) + ': ' + str(email) + '\n'
         return display
 
 

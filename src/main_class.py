@@ -6,7 +6,6 @@ class MainClass(ABC):
     def __init__(self):
         self.created_at = datetime.datetime.now()
         self.updated_at = 'Not changed'
-        self.m = int
 
     def update_time(self):
         self.updated_at = datetime.datetime.now()

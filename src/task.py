@@ -1,6 +1,5 @@
 import datetime
 import hashlib
-import re
 
 from helpers.consts import STATUS_LIST
 from src.main_class import MainClass
@@ -15,24 +14,23 @@ class Task(MainClass):
         self.project = project
         self.priority = priority
         self.trek_time = datetime.timedelta()
-        self.status = 'to do'
+        self.status = status
         self.sub_tasks = {}
         self.name_sub_tasks = []
         self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
 
     def __str__(self):
-        if self.executor:
-            return (f'1.Task name: {self.name}.\n2.Status - ?\n3.Executor: {self.executor.email}.\n'
-                    f'4.Priority {self.priority}')
-        return f'1.Task name: {self.name}.\n2.Status - ?\n3.Priority {self.priority}'
-        update_value = {}
-        # value = {'name' : self.name, 'email': self.executor.email, 'priority': self.priority, 'project': self.project}
-        # for val in value.items():
-        #     if value.values():
-        #         update_value[val.key] = val.values()
-        # return try_it(value)
-#TODO это в работе, discuss
-
+        task_info_list = []
+        key_output_list = ['name', 'status', 'executor', 'priority']
+        for key in self.__dict__.keys():
+            if key == 'executor' and self.__dict__[key]:
+                task_info_list.append(str(key) + ': ' + str(self.__dict__[key].email))
+            elif key in key_output_list and self.__dict__[key]:
+                task_info_list.append(str(key) + ': ' + str(self.__dict__[key]))
+        display = 'Tasks info:\n'
+        for num, info in enumerate(task_info_list, start=1):
+            display += str(num) + '.' + str(info) + '\n'
+        return display
 
     def add_sub_tasks(self, new_sub_task):
         if isinstance(new_sub_task, list):
@@ -47,7 +45,6 @@ class Task(MainClass):
             self.name_sub_tasks.append(sub_task.name)
             if sub_task.sub_tasks:
                 sub_task.show_all_sub_tasks()
-                continue
         print(f' - {self.name}: ' + str(self.name_sub_tasks).strip("[]").replace("'", ''))
         # TODO
         # name_sub_tasks = []
@@ -69,18 +66,27 @@ class Task(MainClass):
         self.remove_all_subt_not_use(task)
         del self.sub_tasks[task.uid]
 
+    """
+    Следующий метод используется как внутренний для другого, 
+    отдельно использование не рекомендуется
+    """
+
     def remove_all_subt_not_use(self, task):
         if task.sub_tasks:
             for i in list(task.sub_tasks.values()):
                 del task.sub_tasks[i.uid]
                 task.remove_all_subt_not_use(i)
 
-    def show_full__info_task(self):
-        n = [self.name, self.priority, self.created_at, self.updated_at, self.executor.email, self.project.name_project]
-        b = ['name: ', 'priority: ', 'created_at: ', 'updated_at: ', 'executor: ', 'project: ']
+    def show_full_info_task(self):
+        task_info_list = []
+        for key in self.__dict__.keys():
+            if key == 'executor' and self.__dict__[key]:
+                task_info_list.append(str(key) + ': ' + str(self.__dict__[key].email))
+            elif key != 'sub_tasks' and self.__dict__[key]:
+                task_info_list.append(str(key) + ': ' + str(self.__dict__[key]))
         display = 'Full info tasks:\n'
-        for i, j in enumerate(list(zip(b, n)), start=1):
-            display += str(i) + '.' + re.sub(r'[,()\']', '', str(j)) + '\n'
+        for i, j in enumerate(task_info_list, start=1):
+            display += str(i) + '.' + str(j) + '\n'
         return display
 
     def add_executor_for_task(self, dev):
@@ -107,9 +113,11 @@ class Task(MainClass):
 
     def change_status_on_resolve(self):
         self.status = STATUS_LIST['resolve']
+        self.update_time()
 
     def change_status_on_done(self):
         self.status = STATUS_LIST['done']
+        self.update_time()
 
 
 # TODO:

@@ -12,17 +12,16 @@ class Project(MainClass):
         return f'Name project: {self.name_project}'
 
     def add_task_to_project(self, task):
-        # self.task = Project.task
         if isinstance(task, list):
-            for i in task:
-                self.task.append(i)
+            for one in task:
+                self.task.append(one)
         else:
-            self.task.append(task)  # rabotaet
+            self.task.append(task)
 
     def print_all_task(self):
         display = 'All task:\n'
-        for i, j in enumerate([r.name for r in self.task], start=1):
-            display += str(i) + ': ' + str(j) + '\n'
+        for num, name in enumerate([r.name for r in self.task], start=1):
+            display += str(num) + ': ' + str(name) + '\n'
         return display
 
 
