@@ -1,5 +1,6 @@
+import re
+
 from src.main_class import MainClass
-from helpers.reformat import create_list_display
 
 
 class DevList(MainClass):
@@ -15,9 +16,11 @@ class DevList(MainClass):
             self.devs[dev.uid] = dev
 
     def __str__(self):
-        a = [dev.email for dev in self.devs.values()]
-        return 'Our developer: \n' + create_list_display(a)
+        display = 'All dev:\n'
+        for num, email in enumerate([dev.email for dev in self.devs.values()], start=1):
+            display += str(num) + ': ' + str(email) + '\n'
+        return display
 
-    def get_all_email(self):
-        a = [dev.email for dev in self.devs.values()]
-        return 'Our developer: \n' + create_list_display(a)
+
+
+

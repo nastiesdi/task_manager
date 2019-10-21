@@ -2,14 +2,17 @@ from src.main_class import MainClass
 
 
 class TaskList(MainClass):
-    def __init__(self, task):
+    def __init__(self, tasks):
         super().__init__()
         self.tasks = dict()
-        for i in task:
-            self.add_task(i)
+        for task in tasks:
+            self.add_task(task)
 
     def __str__(self):
-        return str({u.name for u in self.tasks.values()})
+        display = ''
+        for num, name in enumerate([task.name for task in self.tasks.values()], start=1):
+            display += str(num) + ': ' + str(name) + '\n'
+        return display
 
     def add_task(self, task):
         self.tasks[task.uid] = task
@@ -18,17 +21,17 @@ class TaskList(MainClass):
         del self.tasks[task.uid]
 
     def get_all_task(self):
-        a = ''
+        str_all_task = ''
         for task in self.tasks.values():
-            a += ''.join(str(task) + '\n')
-        return a
+            str_all_task += ''.join(str(task) + '\n')
+        return str_all_task
 
     def sort_priority_task(self):
         sorted_task_list = [task[1] for task in sorted(self.tasks.items(), key=lambda x: x[1].priority)]
-        k = ''
+        str_sort_task = ''
         for task in sorted_task_list:
-            k += ''.join(str(task) + '\n')
-        return k
+            str_sort_task += ''.join(str(task.name) + ' -- task priority: ' + str(task.priority) + '\n')
+        return str_sort_task
 
     def get_one_task(self, uid):
         return self.tasks[uid]
