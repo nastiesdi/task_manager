@@ -1,3 +1,4 @@
 ACCEPTED = 'Accepted'
 
-STATUS_LIST = {'to do': 'to do', 'in progress': 'in progress', 'resolve': 'resolve', 'done': 'done'}
+STATUS_LIST = {'To do': 'to_do', 'In progress': 'in_progress', 'Resolve': 'resolve', 'Done': 'done'}
+PRIORITY = {'High': 1, 'Medium': 2, 'low': 3}
