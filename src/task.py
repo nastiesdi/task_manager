@@ -1,20 +1,21 @@
 import datetime
 import hashlib
 
-from helpers.consts import STATUS_LIST
+from helpers.consts import STATUS_LIST, PRIORITY, TASK_LIST
 from src.main_class import MainClass
-from helpers.checker import check_priority
 
 
 class Task(MainClass):
-    def __init__(self, name, priority, project=None, executor=None, status='to do', sub_tasks=None):
+    def __init__(self, name, priority, project=None, executor=None, status='To do', sub_tasks=None):
         super().__init__()
         self.name = name
         self.executor = executor
         self.project = project
-        self.priority = priority
         self.trek_time = datetime.timedelta()
         self.status = status
+        self.priority = PRIORITY[priority]
+        self.track_time = datetime.timedelta()
+        self.status = STATUS_LIST[status]
         self.sub_tasks = {}
         self.name_sub_tasks = []
         self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
@@ -32,6 +33,9 @@ class Task(MainClass):
             display += str(num) + '.' + str(info) + '\n'
         return display
 
+    def add_to_tasklist(self):
+        TASK_LIST[self.name] = self
+
     def add_sub_tasks(self, new_sub_task):
         if isinstance(new_sub_task, list):
             for task in new_sub_task:
@@ -41,12 +45,22 @@ class Task(MainClass):
 
     def show_all_sub_tasks(self):
         self.name_sub_tasks = []
-        for sub_task in self.sub_tasks.values():
-            self.name_sub_tasks.append(sub_task.name)
-            if sub_task.sub_tasks:
-                sub_task.show_all_sub_tasks()
-        print(f' - {self.name}: ' + str(self.name_sub_tasks).strip("[]").replace("'", ''))
+        def add_sub_task(task):
+            for sub_task in task.sub_tasks.values():
+                self.name_sub_tasks.append(sub_task.name)
+                if sub_task.sub_tasks:
+                    add_sub_task(sub_task)
+        return self.name_sub_tasks
+
+        # print(f' - {self.name}: ' + str(self.name_sub_tasks).strip("[]").replace("'", ''))
         # TODO
+        # self.name_sub_tasks = []
+        # for sub_task in self.sub_tasks.values():
+        #     self.name_sub_tasks.append(sub_task.name)
+        #     if sub_task.sub_tasks:
+        #         sub_task.show_all_sub_tasks()
+        # print(f' - {self.name}: ' + str(self.name_sub_tasks).strip("[]").replace("'", ''))
+
         # name_sub_tasks = []
         # name_sub = ''
         # for sub_task in self.sub_tasks.values():
@@ -55,6 +69,12 @@ class Task(MainClass):
         #         sub_task.show_all_sub_tasks()
         #     name_sub += f' - {self.name}: ' + str(name_sub_tasks).strip("[]").replace("'", '')
         # return name_sub
+
+    # Add with Sasha
+    # tasks = []
+    # def fill_tasks():
+    #     for sub_task in self.sub_tasks:
+    #         tasks
 
     def show_sub_tasks(self):
         self.name_sub_tasks = []
@@ -100,25 +120,23 @@ class Task(MainClass):
     def change_task(self, task_executor=None, new_priority=None):
         if task_executor:
             self.executor = task_executor  # тут нужно проверить есть ли такой разработчик, а так добавление работает!!
-        if check_priority(new_priority):
-            self.priority = new_priority
+        self.priority = PRIORITY[new_priority]
 
     def change_status_on_to_do(self):
-        self.status = STATUS_LIST['to do']
+        self.status = STATUS_LIST['To do']
         self.update_time()
 
     def change_status_on_in_progress(self):
-        self.status = STATUS_LIST['in progress']
+        self.status = STATUS_LIST['In progress']
         self.update_time()
 
     def change_status_on_resolve(self):
-        self.status = STATUS_LIST['resolve']
+        self.status = STATUS_LIST['Resolve']
         self.update_time()
 
     def change_status_on_done(self):
-        self.status = STATUS_LIST['done']
+        self.status = STATUS_LIST['Done']
         self.update_time()
-
 
 # TODO:
 

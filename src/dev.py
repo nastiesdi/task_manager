@@ -2,6 +2,9 @@ import hashlib
 
 from src.task_list import TaskList
 from src.main_class import MainClass
+from src.dev_list import dev_list
+from helpers.checker import is_valid_email
+from helpers.consts import DEV_LIST
 
 
 class Dev(MainClass):
@@ -12,6 +15,10 @@ class Dev(MainClass):
         self.task_resolve = TaskList({})
         self.task_done = TaskList({})
         self.task_to_do = TaskList({})
+        if is_valid_email(email):
+            self.email = email
+        else:
+            raise Exception('Email is not valid')
         self.email = email
         self.password = password
         self.first_name = first_name
@@ -38,8 +45,14 @@ class Dev(MainClass):
             display += str(i) + '.' + str(j) + '\n'
         return display
 
+    def add_to_dev_list(self):
+        DEV_LIST[self.email] = self
+
     def change_email(self, new_email):
-        self.email = new_email
+        if is_valid_email(new_email):
+            self.email = new_email
+        else:
+            raise Exception('Email is not valid')
 
     def check_password(self, my_password):
         return self.password == my_password
@@ -48,7 +61,7 @@ class Dev(MainClass):
         if self.check_password(old_password):
             self.password = new_password
         else:
-            print('Old password is incorrect')
+            raise Exception('Old password is incorrect')
 
     def add_task(self, task):
         if isinstance(task, list):

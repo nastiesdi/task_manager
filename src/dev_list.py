@@ -22,5 +22,5 @@ class DevList(MainClass):
         return display
 
 
-
+dev_list = DevList()
 
