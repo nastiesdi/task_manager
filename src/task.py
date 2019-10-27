@@ -19,6 +19,7 @@ class Task(MainClass):
         self.sub_tasks = {}
         self.name_sub_tasks = []
         self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
+        TASK_LIST[self.name] = self
 
     def __str__(self):
         task_info_list = []

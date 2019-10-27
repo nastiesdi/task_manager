@@ -20,7 +20,3 @@ class DevList(MainClass):
         for num, email in enumerate([dev.email for dev in self.devs.values()], start=1):
             display += str(num) + ': ' + str(email) + '\n'
         return display
-
-
-dev_list = DevList()
-

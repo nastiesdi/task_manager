@@ -3,7 +3,7 @@ import argparse
 import sys
 
 from src.dev import Dev
-from src.dev_list import dev_list
+from src.dev_list import DevList
 from src.task import Task
 from src.project import Project
 from src.task_list import TaskList
@@ -33,23 +33,23 @@ from helpers.checker import is_valid_email
 #     project_mazad = Project('Mazad')
 #     project_bosh = Project('Bosh')
 #     task_list = TaskList([task2, task3, task4])
-#     all_dev = dev_list
+#     all_dev = DevList()
 #     all_dev.add_dev([dev1, dev2, dev3, dev4, dev5])
 #     print(str(all_dev) + '\n')
 #     print('One of our developer\n' + str(dev1)+ '\n')
 #     print('Changing email and password:\n 1.Use incorrect old password')
 #     dev1.change_email('newemaildevSanya@gmail.com')
-#     dev1.change_password('newpassword123', 'newpassword123')
+#     dev1.change_password('123456difnastyalovesashaicultpassword', 'newpassword123')
 #     print('email: ' + dev1.email)
 #     print('password: ' + dev1.password)
 #     print(' 2. Use correct old password')
-#     dev1.change_password('123456', 'newpassword123')
+#     dev1.change_password('newpassword123', 'newpassword123')
 #     print('new password is: ' + str(dev1.password))
 #     print('\n Add task to dev')
 #     dev1.add_task([task1, task2, task6, task7, task8, task9, task10])
 #     print(dev1)
 #     print('\n Remove devs task: "add_field_task2"')
-#     dev1.remove_task_absolutely(task2)
+#     dev1.remove_tasks(task2, is_deleted_at_all=True)
 #     print(dev1)
 #     print('\nShow all dev tasks')
 #     print(dev1.all_tasks)
@@ -138,16 +138,17 @@ def add_task_to_proj(args):
 
 def print_task(args):
     project = PROJ_LIST[args.nameproject]
-    project.print_all_task()
-    # add visow
+    print(project.print_all_task())
+    # add visow, che to ne rabotaet
 
 def parse_args():
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers()
     proj_parser = subparsers.add_parser('proj')
-    # add_task_parser = argparse.ArgumentParser(parents=[proj_parser])
     new_task_pareser = proj_parser.add_subparsers()
     add_task_parser = new_task_pareser.add_parser('taskpars')
+    pr_task = new_task_pareser.add_parser('print_task')
+    pr_task.set_defaults(funk=print_task)
     proj_parser.add_argument('-n', '--nameproject')
     proj_parser.set_defaults(func=create_new_project)
     add_task_parser.add_argument('-nt', '--nametask', choices=TASK_LIST)
@@ -181,9 +182,13 @@ def main():
                last_name='Gubin', age=21)
     dev1.add_to_dev_list()
     task1 = Task('create_database', 'Medium')
+    task2 = Task('2nd task', 'low')
     task1.add_to_tasklist()
     project_mazad = Project('Mazad')
+    project_mazad.add_task_to_project(task1)
+    project_mazad.add_task_to_project(task2)
     project_mazad.add_to_proj_list()
+    project_mazad.print_all_task()
     parse_args()
 
 
