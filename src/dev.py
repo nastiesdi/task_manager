@@ -2,6 +2,8 @@ import hashlib
 
 from src.task_list import TaskList
 from src.main_class import MainClass
+from helpers.checker import is_valid_email
+from helpers.consts import DEV_LIST, TASK_LIST
 
 
 class Dev(MainClass):
@@ -12,6 +14,10 @@ class Dev(MainClass):
         self.task_resolve = TaskList({})
         self.task_done = TaskList({})
         self.task_to_do = TaskList({})
+        if is_valid_email(email):
+            self.email = email
+        else:
+            raise Exception('Email is not valid')
         self.email = email
         self.password = password
         self.first_name = first_name
@@ -38,8 +44,14 @@ class Dev(MainClass):
             display += str(i) + '.' + str(j) + '\n'
         return display
 
+    def add_to_dev_list(self):
+        DEV_LIST[self.email] = self
+
     def change_email(self, new_email):
-        self.email = new_email
+        if is_valid_email(new_email):
+            self.email = new_email
+        else:
+            raise ValueError('Email is not valid')
 
     def check_password(self, my_password):
         return self.password == my_password
@@ -48,7 +60,7 @@ class Dev(MainClass):
         if self.check_password(old_password):
             self.password = new_password
         else:
-            print('Old password is incorrect')
+            raise ValueError('Old password is incorrect')
 
     def add_task(self, task):
         if isinstance(task, list):
@@ -59,11 +71,7 @@ class Dev(MainClass):
             self.all_tasks.add_task(task)
             self.task_to_do.add_task(task)
 
-    def remove_task_absolutely(self, task):
-        self.remove_tasks(task)
-        self.all_tasks.remove_task(task)
-
-    def remove_tasks(self, task):
+    def remove_tasks(self, task, is_deleted_at_all = False):
         if isinstance(task, list):
             for t in task:
                 if t.uid in self.task_to_do.tasks:
@@ -83,6 +91,9 @@ class Dev(MainClass):
                 self.task_resolve.remove_task(task)
             if task.uid in self.task_done.tasks:
                 self.task_done.remove_task(task)
+        if is_deleted_at_all:
+            self.all_tasks.remove_task(task)
+            del TASK_LIST[task.name]
 
     def set_in_progress(self, task):
         task.change_status_on_in_progress()

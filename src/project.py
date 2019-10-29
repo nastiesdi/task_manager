@@ -1,4 +1,5 @@
 from src.main_class import MainClass
+from helpers.consts import PROJ_LIST
 
 
 class Project(MainClass):
@@ -23,5 +24,8 @@ class Project(MainClass):
         for num, name in enumerate([r.name for r in self.task], start=1):
             display += str(num) + ': ' + str(name) + '\n'
         return display
+
+    def add_to_proj_list(self):
+        PROJ_LIST[self.name_project] = self
 
 
