@@ -2,12 +2,12 @@ import hashlib
 
 from src.task_list import TaskList
 from src.main_class import MainClass
-from helpers.checker import is_valid_email
+from helpers.checker import is_valid_email, is_valid_name, is_valid_password, is_valid_age
 from helpers.consts import DEV_LIST, TASK_LIST
 
 
 class Dev(MainClass):
-    def __init__(self, email, password, first_name, last_name, age, task=[]):
+    def __init__(self, email, password, repeat_password, first_name, last_name, age, task=[]):
         super().__init__()
         self.all_tasks = TaskList({})
         self.task_in_progress = TaskList({})
@@ -18,11 +18,25 @@ class Dev(MainClass):
             self.email = email
         else:
             raise Exception('Email is not valid')
-        self.email = email
-        self.password = password
-        self.first_name = first_name
-        self.last_name = last_name
-        self.age = age
+        if is_valid_password(password):
+            if password == repeat_password:
+                self.password = password
+            else:
+                raise ValueError('Passwords are not match')
+        else:
+            raise Exception('Password is not valid')
+        if is_valid_name(first_name):
+            self.first_name = first_name
+        else:
+            raise ValueError('First name must be between 2 and 15 characters')
+        if is_valid_name(last_name):
+            self.last_name = last_name
+        else:
+            raise ValueError('Last name must be between 2 and 15 characters')
+        if is_valid_age(age):
+            self.age = age
+        else:
+            raise ValueError('Ege must between 16 and 100')
         self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
         if task:
             if isinstance(task, list):
@@ -53,14 +67,12 @@ class Dev(MainClass):
         else:
             raise ValueError('Email is not valid')
 
-    def check_password(self, my_password):
-        return self.password == my_password
-
     def change_password(self, old_password, new_password):
-        if self.check_password(old_password):
-            self.password = new_password
+        if is_valid_password(new_password):
+            if self.password == old_password:
+             raise ValueError('Password in not match')
         else:
-            raise ValueError('Old password is incorrect')
+            raise ValueError('New password is not correct')
 
     def add_task(self, task):
         if isinstance(task, list):
