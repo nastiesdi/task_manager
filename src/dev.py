@@ -6,8 +6,9 @@ from helpers.checker import is_valid_email, is_valid_name, is_valid_password, is
 from helpers.consts import DEV_LIST, TASK_LIST
 
 
+# Юзменяемые типы не используй в аргументах
 class Dev(MainClass):
-    def __init__(self, email, password, repeat_password, first_name, last_name, age, task=[]):
+    def __init__(self, email, password, repeat_password, first_name, last_name, age, task=None):
         super().__init__()
         self.all_tasks = TaskList({})
         self.task_in_progress = TaskList({})
@@ -38,9 +39,9 @@ class Dev(MainClass):
         else:
             raise ValueError('Ege must between 16 and 100')
         self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
-        if task:
+        if task: # У тебя в аргументах таск был листом, потом ты делаешь проверку на лист
             if isinstance(task, list):
-                for one in task:
+                for one in task: # for task in tasks?
                     self.all_tasks.add_task(one)
                     self.task_to_do.add_task(one)
             else:
@@ -61,6 +62,9 @@ class Dev(MainClass):
     def add_to_dev_list(self):
         DEV_LIST[self.email] = self
 
+    def check_password(self, my_password):
+        return self.password == my_password
+
     def change_email(self, new_email):
         if is_valid_email(new_email):
             self.email = new_email
@@ -70,7 +74,7 @@ class Dev(MainClass):
     def change_password(self, old_password, new_password):
         if is_valid_password(new_password):
             if self.password == old_password:
-             raise ValueError('Password in not match')
+                raise ValueError('Password in not match')
         else:
             raise ValueError('New password is not correct')
 
@@ -83,7 +87,7 @@ class Dev(MainClass):
             self.all_tasks.add_task(task)
             self.task_to_do.add_task(task)
 
-    def remove_tasks(self, task, is_deleted_at_all = False):
+    def remove_tasks(self, task, is_deleted_at_all=False):
         if isinstance(task, list):
             for t in task:
                 if t.uid in self.task_to_do.tasks:

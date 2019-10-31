@@ -5,7 +5,7 @@ from helpers.consts import PROJ_LIST
 class Project(MainClass):
     def __init__(self, name_project, task=[], dev=None):
         super().__init__()
-        self.name_project = name_project
+        self.name_project = name_project ##???? project.project_name, если ты обрщаешь к проджект разве неочевидно что ты имеешь в виду именно его имя
         self.task = task
         self.dev = dev
 

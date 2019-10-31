@@ -1,16 +1,10 @@
-from time import sleep
 import argparse
-import sys
 
 from src.dev import Dev
-from src.dev_list import DevList
 from src.task import Task
 from src.project import Project
-from src.task_list import TaskList
-from helpers.consts import STATUS_LIST, PROJ_LIST, PRIORITY, DEV_LIST, TASK_LIST
-from helpers.checker import is_valid_email
-
-# def main():
+from manager import Manager
+from helpers.consts import STATUS_LIST, PROJ_LIST, PRIORITY, DEV_LIST, TASK_LIST# def main():
 #
 #     all_dev = DevList()
 #     """Создание объектов"""
@@ -101,96 +95,59 @@ from helpers.checker import is_valid_email
 #     print(task1)
 #     print(dev2)
 
-
-def create_new_project(args):
-    project = Project(name_project=args.nameproject)
-    project.add_to_proj_list()
-    print(project)
-
-
-def create_new_dev(args):
-    developer = Dev(email=args.email,
-                    password=args.password,
-                    first_name=args.first_name,
-                    last_name=args.last_name,
-                    age=args.age)
-    developer.add_to_dev_list()
-    # print(DEV_LIST)
-
-
-def create_task(args):
-    task = Task(name=args.name,
-                priority=args.priority,
-                project=args.project,
-                executor=args.executor,
-                status=args.status
-                # sub_tasks=args.sub_tasks
-                )
-    task.add_to_tasklist()
-    # print(TASK_LIST)
-
-
-def add_task_to_proj(args):
-    task = TASK_LIST[args.nametask]
-    project = PROJ_LIST[args.nameproject]
-    project.add_task_to_project(task)
-    print(project)
-
-def print_task(args):
-    project = PROJ_LIST[args.nameproject]
-    print(project.print_all_task())
-    # add visow, che to ne rabotaet
-
 def parse_args():
+    '''
+        Добавить везде нормальный хелр, чтобы было похоже на прод вариант
+    :return:
+    '''
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers()
-    proj_parser = subparsers.add_parser('proj')
-    new_task_pareser = proj_parser.add_subparsers()
-    add_task_parser = new_task_pareser.add_parser('taskpars')
-    pr_task = new_task_pareser.add_parser('print_task')
-    pr_task.set_defaults(funk=print_task)
-    proj_parser.add_argument('-n', '--nameproject')
-    proj_parser.set_defaults(func=create_new_project)
-    add_task_parser.add_argument('-nt', '--nametask', choices=TASK_LIST)
-    add_task_parser.set_defaults(func=add_task_to_proj)
-    dev_parser = subparsers.add_parser('dev')
-    dev_parser.add_argument('-e', '--email', type=str)
-    dev_parser.add_argument('-p', '--password', type=str) #add check passwotd is valid
-    dev_parser.add_argument('-fn', '--first_name', type=str)
-    dev_parser.add_argument('-ln', '--last_name', type=str)
-    dev_parser.add_argument('-a', '--age', type=int)
-    dev_parser.set_defaults(func=create_new_dev)
-    task_parser = subparsers.add_parser('task')
-    task_parser.add_argument('-n', '--name', required=True)
-    task_parser.add_argument('-p', '--priority', choices=PRIORITY)
-    task_parser.add_argument('-pr', '--project', default=None, choices=PROJ_LIST)
-    task_parser.add_argument('-ex', '--executor', default=None, choices=DEV_LIST)
-    task_parser.add_argument('-s', '--status', default=STATUS_LIST['In progress'], choices=STATUS_LIST)
-    # task_parser.add_argument('-sb', '--subtasks', default=None)
-    task_parser.set_defaults(func=create_task)
+    reg_parser = subparsers.add_parser('reg_user')
+    reg_parser.add_argument('-e', '--email', type=str)
+    reg_parser.add_argument('-p', '--password', type=str)
+    reg_parser.add_argument('-r', '--repeat_password', type=str)
+    reg_parser.add_argument('-f', '--first_name', type=str)
+    reg_parser.add_argument('-l', '--last_name', type=str)
+    reg_parser.add_argument('-a', '--age', type=int)
+    reg_parser.set_defaults(func=manager.registration)
 
+    login_parser = subparsers.add_parser('login')
+    login_parser.add_argument('-e', '--email')
+    login_parser.add_argument('-p', '--password')
+    login_parser.set_defaults(func=manager.login)
     args = parser.parse_args()
     if 'func' in args:
-        print('@@@@@@')
-        print(args)
-        print('@@@@@@')
         args.func(args)
+        print(args)
 
-
+'''все
+,ну все, получается  Да)*** мне нравиться тут переписываться) ахахахах поки))от
+отлично) доавай устроим секс  пайчарме 
+ахахахахаха))) классная идея!!
+я думаю еще никто такое не практиковал))
+все) пока))))
+да, тоже что сделать? у тебя был рабочий вариант до тог, как ты его потерла 
+который был дня 4 назад? ты про нео?ну ла я сним сравнивала сегоднся, вро 
+'''
 def main():
-    dev1 = Dev('devSanya@mail.ru', password='123456difnastyalovesashaicultpassword', first_name='Alexander',
-               last_name='Gubin', age=21)
-    dev1.add_to_dev_list()
-    task1 = Task('create_database', 'Medium')
-    task2 = Task('2nd task', 'low')
-    task1.add_to_tasklist()
-    project_mazad = Project('Mazad')
-    project_mazad.add_task_to_project(task1)
-    project_mazad.add_task_to_project(task2)
-    project_mazad.add_to_proj_list()
-    project_mazad.print_all_task()
+
     parse_args()
+    dev1 = Dev(email='dev@nn', password='123456Qq', repeat_password='123456Qq', first_name='Alexander',
+               last_name='Gubin', age=21)
+    # dev1.add_to_dev_list()
+    # task1 = Task('create_database', 'Medium')
+    # task2 = Task('2nd task', 'low')
+    # task1.add_to_tasklist()
+    # project_mazad = Project('Mazad')
+    # project_mazad.add_task_to_project(task1)
+    # project_mazad.add_task_to_project(task2)
+    # project_mazad.add_to_proj_list()
+    # project_mazad.print_all_task()
+    #
+    # print(DEV_LIST)
+    # print(manager.developers)
 
 
 if __name__ == '__main__':
+    manager = Manager()
     main()
