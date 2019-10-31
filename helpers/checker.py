@@ -26,13 +26,11 @@ def is_valid_password(password):
 
 
 def is_valid_age(age):
-    return True if 16 < age < 100 else False
+    return True if 15 < age < 100 else False
 
-'''
-Какая то странная хрень, не особо погнимаю зачем она нудна
-'''
+
 def is_valid_name(name):
-    if type(name) == str:  # НИКОГДА НЕ ДЕЛАЙ ПРОВЕРКУ НА ТИП TYPом!!!!!! используй isinstance
-        return True if bool(re.match("^[A-Za-z0-9_-]*$", name)) and 2 < len(name) < 15 else False
+    if isinstance(name, str):
+        return True if name.isalpha() and 2 < len(name) < 15 else False
     else:
         return False

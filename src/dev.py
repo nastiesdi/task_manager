@@ -29,11 +29,11 @@ class Dev(MainClass):
         if is_valid_name(first_name):
             self.first_name = first_name
         else:
-            raise ValueError('First name must be between 2 and 15 characters')
+            raise ValueError('First name must be between 2 and 15 latin characters')
         if is_valid_name(last_name):
             self.last_name = last_name
         else:
-            raise ValueError('Last name must be between 2 and 15 characters')
+            raise ValueError('Last name must be between 2 and 15 latin characters')
         if is_valid_age(age):
             self.age = age
         else:
