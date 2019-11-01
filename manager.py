@@ -1,6 +1,6 @@
 import argparse
 
-from logger import add_info_loger
+from logger import LOGGER
 from helpers.checker import is_valid_email, is_valid_password, is_valid_name
 from src.dev import Dev
 from helpers.consts import STATUS_LIST, PROJ_LIST, PRIORITY, DEV_LIST, TASK_LIST
@@ -23,15 +23,16 @@ class Manager:
         dev = Dev(email=args.email, repeat_password=args.repeat_password, password=args.password,
                   first_name=args.first_name, last_name=args.last_name, age=args.age)
         self.developers[dev.email] = dev
-        add_info_loger('Created employee {}'.format(dev.email))
+        LOGGER.info(f'create Employee: {args.email}, First name: {args.first_name} ')
 
     def login(self, args):
         if args.email in self.developers:
             if self.developers[args.email].check_password(args.password):
                 self.current_dev = self.developers[args.email]
         else:
+            LOGGER.warning(f'User cant register/ Input data: email - {args.email}, password - {args.password} ')
             raise KeyError('Developer doesn\'t exist')
-        add_info_loger()
+
 
     def change_password(self, email, old_password, repeat_old_password, new_password):
         pass
