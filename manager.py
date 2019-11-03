@@ -1,4 +1,5 @@
 import argparse
+import pickle
 
 from logger import LOGGER
 from helpers.checker import is_valid_email, is_valid_password, is_valid_name
@@ -20,11 +21,15 @@ class Manager:
         self.current_dev = None
 
     def registration(self, args):
+        # with open('login.pkl', 'rb') as infile:
+        #     self = pickle.load(infile)
         if args.email not in self.developers:
             dev = Dev(email=args.email, repeat_password=args.repeat_password, password=args.password,
                       first_name=args.first_name, last_name=args.last_name, age=args.age)
             if dev:
                 self.developers[dev.email] = dev
+                with open('login.pkl', 'wb') as outfile:
+                    pickle.dump(self, outfile, pickle.HIGHEST_PROTOCOL)
         else:
             raise ValueError('This email is already in use')
         LOGGER.info(f'create Employee: {args.email}, First name: {args.first_name} ')
@@ -33,6 +38,8 @@ class Manager:
         if args.email in self.developers:
             if self.developers[args.email].check_password(args.password):
                 self.current_dev = self.developers[args.email]
+                with open('login.pkl', 'wb') as outfile:
+                    pickle.dump(self, outfile, pickle.HIGHEST_PROTOCOL)
         else:
             LOGGER.warning(f'User cant register/ Input data: email - {args.email}, password - {args.password} ')
             raise KeyError('Developer doesn\'t exist')

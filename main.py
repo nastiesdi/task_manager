@@ -1,4 +1,6 @@
 import argparse
+import pickle
+
 from src.dev import Dev
 from src.task import Task
 from src.project import Project
@@ -144,4 +146,6 @@ def main():
 
 if __name__ == '__main__':
     manager = Manager()
+    with open('login.pkl', 'rb') as infile:
+        manager = pickle.load(infile)
     main()
