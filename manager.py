@@ -20,9 +20,13 @@ class Manager:
         self.current_dev = None
 
     def registration(self, args):
-        dev = Dev(email=args.email, repeat_password=args.repeat_password, password=args.password,
-                  first_name=args.first_name, last_name=args.last_name, age=args.age)
-        self.developers[dev.email] = dev
+        if args.email not in self.developers:
+            dev = Dev(email=args.email, repeat_password=args.repeat_password, password=args.password,
+                      first_name=args.first_name, last_name=args.last_name, age=args.age)
+            if dev:
+                self.developers[dev.email] = dev
+        else:
+            raise ValueError('This email is already in use')
         LOGGER.info(f'create Employee: {args.email}, First name: {args.first_name} ')
 
     def login(self, args):
@@ -32,7 +36,6 @@ class Manager:
         else:
             LOGGER.warning(f'User cant register/ Input data: email - {args.email}, password - {args.password} ')
             raise KeyError('Developer doesn\'t exist')
-
 
     def change_password(self, email, old_password, repeat_old_password, new_password):
         pass

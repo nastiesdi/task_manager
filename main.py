@@ -1,5 +1,4 @@
 import argparse
-
 from src.dev import Dev
 from src.task import Task
 from src.project import Project
@@ -123,11 +122,14 @@ def parse_args():
 
 def main():
 
-    parse_args()
-    dev1 = Dev(email='dev@nn', password='123456Qq', repeat_password='123456Qq', first_name='Alexander',
+    # parse_args()
+    dev1 = Dev(email='dev@hn', password='123456Qq', repeat_password='123456Qq', first_name='Alexander',
                last_name='Gubin', age=21)
-    # dev1.add_to_dev_list()
-    # task1 = Task('create_database', 'Medium')
+    dev1.add_to_dev_list()
+    manager.developers[dev1.email] = dev1
+    print(manager.developers)
+    parse_args()
+    task1 = Task('create_database', 'Medium')
     # task2 = Task('2nd task', 'low')
     # task1.add_to_tasklist()
     # project_mazad = Project('Mazad')

@@ -1,6 +1,7 @@
 import datetime
 import hashlib
 
+from logger import TASK_LOG
 from helpers.consts import STATUS_LIST, PRIORITY, TASK_LIST
 from src.main_class import MainClass
 
@@ -20,6 +21,7 @@ class Task(MainClass):
         self.name_sub_tasks = []
         self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
         TASK_LIST[self.name] = self
+        TASK_LOG.info(f'create task: name - {name}')
 
     def __str__(self):
         task_info_list = []

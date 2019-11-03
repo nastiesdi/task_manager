@@ -1,5 +1,6 @@
 import hashlib
 
+from logger import  LOGGER
 from src.task_list import TaskList
 from src.main_class import MainClass
 from helpers.checker import is_valid_email, is_valid_name, is_valid_password, is_valid_age
@@ -18,28 +19,34 @@ class Dev(MainClass):
         if is_valid_email(email):
             self.email = email
         else:
+            LOGGER.error(f'Try to create Employee using not valid email: {email}')
             raise Exception('Email is not valid')
         if is_valid_password(password):
             if password == repeat_password:
                 self.password = password
             else:
+                LOGGER.error(f'Try to create Employee using not match password: {password} - {repeat_password}')
                 raise ValueError('Passwords are not match')
         else:
+            LOGGER.error(f'Try to create Employee using not valid password: {password}')
             raise Exception('Password is not valid')
         if is_valid_name(first_name):
             self.first_name = first_name
         else:
+            LOGGER.error(f'Try to create Employee using not valid first name: {first_name}')
             raise ValueError('First name must be between 2 and 15 latin characters')
         if is_valid_name(last_name):
             self.last_name = last_name
         else:
+            LOGGER.error(f'Try to create Employee using not valid last name: {last_name}')
             raise ValueError('Last name must be between 2 and 15 latin characters')
         if is_valid_age(age):
             self.age = age
         else:
+            LOGGER.error(f'Try to create Employee using age: {age}')
             raise ValueError('Ege must between 16 and 100')
         self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
-        if task: # У тебя в аргументах таск был листом, потом ты делаешь проверку на лист
+        if task:
             if isinstance(task, list):
                 for one in task: # for task in tasks?
                     self.all_tasks.add_task(one)
