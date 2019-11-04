@@ -131,7 +131,7 @@ class Task(MainClass):
 
     def change_task(self, task_executor=None, new_priority=None):
         if task_executor:
-            self.executor = task_executor  # тут нужно проверить есть ли такой разработчик, а так добавление работает!! Решай вопрос
+            self.executor = task_executor
         self.priority = PRIORITY[new_priority]
 
     def change_status_on_to_do(self):

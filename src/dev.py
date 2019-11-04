@@ -10,6 +10,15 @@ from helpers.consts import DEV_LIST, TASK_LIST
 # Юзменяемые типы не используй в аргументах
 class Dev(MainClass):
     def __init__(self, email, password, repeat_password, first_name, last_name, age, task=None):
+        """
+        :param email: maska fff@hh.hh
+        :param password: cdcdcddcdc
+        :param repeat_password:
+        :param first_name:
+        :param last_name:
+        :param age:
+        :param task:
+        """
         super().__init__()
         self.all_tasks = TaskList({})
         self.task_in_progress = TaskList({})
@@ -44,7 +53,7 @@ class Dev(MainClass):
             self.age = age
         else:
             LOGGER.error(f'Try to create Employee using age: {age}')
-            raise ValueError('Ege must between 16 and 100')
+            raise ValueError('Age must be between 16 and 100')
         self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
         if task:
             if isinstance(task, list):
