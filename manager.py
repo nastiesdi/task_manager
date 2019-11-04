@@ -35,17 +35,32 @@ class Manager:
         LOGGER.info(f'create Employee: {args.email}, First name: {args.first_name} ')
 
     def login(self, args):
+        with open('login.pkl', 'rb', ) as infile:
+            self = pickle.load(infile)
         if args.email in self.developers:
             if self.developers[args.email].check_password(args.password):
                 self.current_dev = self.developers[args.email]
                 with open('login.pkl', 'wb') as outfile:
                     pickle.dump(self, outfile, pickle.HIGHEST_PROTOCOL)
+            else:
+                raise Exception('Input password is not correct')
         else:
             LOGGER.warning(f'User cant register/ Input data: email - {args.email}, password - {args.password} ')
             raise KeyError('Developer doesn\'t exist')
 
-    def change_password(self, email, old_password, repeat_old_password, new_password):
-        pass
+    def change_password(self, args):
+        with open('login.pkl', 'rb', ) as infile:
+            self = pickle.load(infile)
+        if self.current_dev:
+            old_password = args.old_password
+            new_password = args.new_password
+            repeat_new_password = args.repeat_new_password
+            self.current_dev.change_password(old_password=old_password, new_password=new_password,
+                                             repeat_new_password=repeat_new_password)
+            with open('login.pkl', 'wb') as outfile:
+                pickle.dump(self, outfile, pickle.HIGHEST_PROTOCOL)
+        else:
+            raise Exception('Please login')
 
     def add_task_to_dev(self, email, task):
         pass

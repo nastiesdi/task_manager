@@ -87,12 +87,17 @@ class Dev(MainClass):
         else:
             raise ValueError('Email is not valid')
 
-    def change_password(self, old_password, new_password):
+    def change_password(self, old_password, new_password, repeat_new_password):
         if is_valid_password(new_password):
             if self.password == old_password:
-                raise ValueError('Password in not match')
+                if new_password == repeat_new_password:
+                    self.password = new_password
+                else:
+                    raise ValueError('New password and repeat new password are not match')
+            else:
+                raise ValueError('Old passwords is not correct')
         else:
-            raise ValueError('New password is not correct')
+            raise ValueError('New password is not valid')
 
     def add_task(self, task):
         if isinstance(task, list):
