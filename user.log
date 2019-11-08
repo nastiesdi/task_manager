@@ -1,0 +1,123 @@
+login 2019-11-03 00:26:47,740 - User cant register/ Input data: email - dev@nn, password - 123456Qq 
+login 2019-11-03 00:27:54,700 - User cant register/ Input data: email - dev@nn, password - 123456Qq 
+login 2019-11-03 00:30:14,327 - User cant register/ Input data: email - dev@nn, password - 123456Qq 
+login 2019-11-03 00:30:49,460 - User cant register/ Input data: email - dev@nn, password - 123456Qq 
+registration 2019-11-03 10:28:32,105 - create Employee: dev@nn, First name: dfvdff 
+registration 2019-11-03 10:30:18,923 - create Employee: dev@nn, First name: dfvdff 
+__init__ 2019-11-03 11:55:51,377 - Try to create Employee using not valid email: devnn
+__init__ 2019-11-03 11:56:55,093 - Try to create Employee using not valid email: devnn
+__init__ 2019-11-03 11:57:17,292 - Try to create Employee using not valid email: devn@n
+registration 2019-11-03 11:58:15,862 - create Employee: dev@nn, First name: dfvdff 
+__init__ 2019-11-03 12:00:38,229 - Try to create Employee using not valid email: denn
+__init__ 2019-11-03 12:08:38,197 - Try to create Employee using not valid email: denn
+__init__ 2019-11-03 12:09:02,744 - Try to create Employee using not valid email: denn
+__init__ 2019-11-03 12:53:29,736 - Try to create Employee using not valid email: denn
+registration 2019-11-03 12:54:09,063 - create Employee: de@nn, First name: dfvdff 
+__init__ 2019-11-03 13:14:39,115 - Try to create Employee using not match password: 123456QqQ - 123456qQ
+__init__ 2019-11-03 13:15:14,731 - Try to create Employee using not match password: 123456QqQ - 123456qQ
+__init__ 2019-11-03 13:27:52,764 - Try to create Employee using not match password: 123456QqQ - 123456qQ
+__init__ 2019-11-03 13:28:57,466 - Try to create Employee using not match password: 123456QqQ - 123456qQ
+__init__ 2019-11-03 13:29:35,763 - Try to create Employee using not match password: 123456QqQ - 123456qQ
+__init__ 2019-11-03 13:30:06,590 - Try to create Employee using not match password: 123456QqQ - 123456qQ
+__init__ 2019-11-03 13:30:54,389 - Try to create Employee using not match password: 123456QqQ - 123456qQ
+__init__ 2019-11-03 13:31:22,173 - Try to create Employee using not match password: 123456QqQ - 123456qQ
+__init__ 2019-11-03 13:40:55,819 - create task: name - create_database
+__init__ 2019-11-03 13:40:58,199 - create task: name - create_database
+__init__ INFO 2019-11-03 13:46:35,578 - create task: name - create_database
+__init__ ERROR 2019-11-03 13:59:25,288 - Try to create Employee using not match password: 123456QqQ - 123456qQ
+registration INFO 2019-11-03 13:59:34,696 - create Employee: de@nn, First name: dfvdff 
+__init__ INFO 2019-11-03 13:59:34,697 - create task: name - create_database
+registration INFO 2019-11-03 14:00:41,790 - create Employee: dev@hn, First name: dfvdff 
+__init__ INFO 2019-11-03 14:00:41,822 - create task: name - create_database
+__init__ INFO 2019-11-03 14:30:22,642 - create task: name - create_database
+registration INFO 2019-11-03 14:30:55,804 - create Employee: de@nn, First name: dfvdff 
+__init__ INFO 2019-11-03 14:30:55,805 - create task: name - create_database
+registration INFO 2019-11-03 14:35:13,216 - create Employee: de@nn, First name: dfvdff 
+__init__ INFO 2019-11-03 14:35:13,216 - create task: name - create_database
+registration INFO 2019-11-03 14:39:50,002 - create Employee: de@nnhhh, First name: dfvdff 
+__init__ INFO 2019-11-03 14:39:50,002 - create task: name - create_database
+registration INFO 2019-11-03 14:41:33,030 - create Employee: de@nnkhhh, First name: dfvdff 
+__init__ INFO 2019-11-03 14:41:33,031 - create task: name - create_database
+__init__ INFO 2019-11-04 23:01:20,759 - create task: name - create_database
+__init__ INFO 2019-11-04 23:02:48,548 - create task: name - create_database
+__init__ INFO 2019-11-04 23:06:58,462 - create task: name - create_database
+__init__ INFO 2019-11-04 23:08:26,299 - create task: name - create_database
+__init__ INFO 2019-11-04 23:09:17,611 - create task: name - create_database
+__init__ INFO 2019-11-04 23:09:41,739 - create task: name - create_database
+__init__ INFO 2019-11-04 23:10:28,238 - create task: name - create_database
+__init__ INFO 2019-11-04 23:22:53,318 - create task: name - create_database
+__init__ INFO 2019-11-04 23:22:58,280 - create task: name - create_database
+__init__ INFO 2019-11-04 23:32:49,051 - create task: name - create_database
+__init__ INFO 2019-11-04 23:33:01,997 - create task: name - create_database
+__init__ INFO 2019-11-04 23:35:05,737 - create task: name - create_database
+__init__ INFO 2019-11-04 23:35:12,429 - create task: name - create_database
+__init__ INFO 2019-11-04 23:35:18,815 - create task: name - create_database
+registration INFO 2019-11-04 23:56:29,286 - create Employee: de@nn, First name: dfvdff 
+__init__ INFO 2019-11-04 23:56:29,327 - create task: name - create_database
+login WARNING 2019-11-04 23:56:48,049 - User cant register/ Input data: email - ded@hn, password - 123456Qq 
+login WARNING 2019-11-04 23:58:39,390 - User cant register/ Input data: email - de@hn, password - 123456Qq 
+registration INFO 2019-11-04 23:58:52,399 - create Employee: de@nn, First name: dfvdff 
+__init__ INFO 2019-11-04 23:58:52,399 - create task: name - create_database
+__init__ INFO 2019-11-04 23:59:09,932 - create task: name - create_database
+__init__ INFO 2019-11-05 00:00:18,840 - create task: name - create_database
+__init__ INFO 2019-11-05 00:00:54,127 - create task: name - create_database
+registration INFO 2019-11-05 00:48:54,317 - create Employee: de@nn, First name: dfvdff 
+__init__ INFO 2019-11-05 00:48:54,342 - create task: name - create_database
+login WARNING 2019-11-05 00:49:04,884 - User cant register/ Input data: email - de@njn, password - 123456Qq 
+login WARNING 2019-11-05 00:51:59,384 - User cant register/ Input data: email - de@njn, password - 123456Qq@ 
+__init__ INFO 2019-11-05 00:52:09,343 - create task: name - create_database
+registration INFO 2019-11-05 00:53:35,913 - create Employee: de@nn, First name: dfvdff 
+__init__ INFO 2019-11-05 00:53:35,913 - create task: name - create_database
+__init__ INFO 2019-11-05 00:53:44,777 - create task: name - create_database
+__init__ INFO 2019-11-05 00:53:48,347 - create task: name - create_database
+__init__ INFO 2019-11-07 07:26:36,873 - create task: name - create_database
+__init__ INFO 2019-11-07 07:27:25,792 - create task: name - create_database
+__init__ INFO 2019-11-07 07:29:34,723 - create task: name - create_database
+__init__ INFO 2019-11-07 07:29:51,297 - create task: name - create_database
+__init__ INFO 2019-11-07 07:29:58,418 - create task: name - create_database
+__init__ INFO 2019-11-07 12:45:56,869 - create task: name - create_database
+__init__ INFO 2019-11-07 12:50:51,058 - create task: name - create_database
+__init__ INFO 2019-11-07 12:50:51,060 - create task: name - create_database
+__init__ INFO 2019-11-07 12:51:03,870 - create task: name - create_database
+__init__ INFO 2019-11-07 12:59:13,785 - create task: name - create_database
+__init__ ERROR 2019-11-08 09:22:33,166 - Try to create Employee using not valid first name: None
+registration INFO 2019-11-08 09:23:14,459 - create Employee: developer@hn, First name: sdsdc 
+login WARNING 2019-11-08 09:23:36,486 - User cant register/ Input data: email - developer@hn, password - 123456Qq 
+registration INFO 2019-11-08 09:27:11,895 - create Employee: developer@hn, First name: sdsdc 
+login WARNING 2019-11-08 09:27:13,678 - User cant register/ Input data: email - developer@hn, password - 123456Qq 
+registration INFO 2019-11-08 09:27:45,659 - create Employee: developer@hn, First name: sdsdc 
+login WARNING 2019-11-08 09:28:01,975 - User cant register/ Input data: email - developer@hn, password - 123456Qq 
+registration INFO 2019-11-08 12:04:48,465 - create Employee: developer@hn, First name: sdsdc 
+login WARNING 2019-11-08 12:07:34,588 - User cant register/ Input data: email - developer@hn, password - 123456Qq 
+registration INFO 2019-11-08 12:07:36,534 - create Employee: developer@hn, First name: sdsdc 
+login WARNING 2019-11-08 12:07:39,122 - User cant register/ Input data: email - developer@hn, password - 123456Qq 
+login WARNING 2019-11-08 12:21:57,143 - User cant register/ Input data: email - developer@hn, password - 123456Qq 
+registration INFO 2019-11-08 12:21:59,654 - create Employee: developer@hn, First name: sdsdc 
+login WARNING 2019-11-08 12:27:52,293 - User cant register/ Input data: email - developer@hn, password - 123456Qq 
+registration INFO 2019-11-08 12:27:58,208 - create Employee: developer@hn, First name: sdsdc 
+__init__ INFO 2019-11-08 12:56:05,244 - create task: name - create_database
+login WARNING 2019-11-08 13:19:05,894 - User cant register/ Input data: email - test@mail.ru, password - 123 
+__init__ INFO 2019-11-08 13:46:07,006 - create task: name - hhhh
+__init__ INFO 2019-11-08 13:48:56,115 - create task: name - hhhh
+__init__ INFO 2019-11-08 13:48:56,123 - create task: name - hhhh
+__init__ INFO 2019-11-08 13:49:18,261 - create task: name - hhhh
+__init__ INFO 2019-11-08 13:49:18,269 - create task: name - hhhh
+__init__ INFO 2019-11-08 13:52:02,513 - create task: name - hhhh
+__init__ INFO 2019-11-08 13:52:02,519 - create task: name - hhhh
+__init__ INFO 2019-11-08 13:52:06,688 - create task: name - hhhh
+__init__ INFO 2019-11-08 13:52:06,696 - create task: name - hhhh
+__init__ INFO 2019-11-08 13:52:08,011 - create task: name - hhhh
+__init__ INFO 2019-11-08 13:52:08,018 - create task: name - hhhh
+__init__ INFO 2019-11-08 13:52:16,891 - create task: name - kkkh
+__init__ INFO 2019-11-08 13:52:16,899 - create task: name - kkkh
+__init__ INFO 2019-11-08 13:52:22,752 - create task: name - mkkkkh
+__init__ INFO 2019-11-08 13:52:22,760 - create task: name - mkkkkh
+__init__ INFO 2019-11-08 13:52:24,208 - create task: name - mkkkkh
+__init__ INFO 2019-11-08 13:52:24,215 - create task: name - mkkkkh
+__init__ INFO 2019-11-08 13:52:25,184 - create task: name - mkkkkh
+__init__ INFO 2019-11-08 13:52:25,191 - create task: name - mkkkkh
+__init__ INFO 2019-11-08 13:52:26,357 - create task: name - mkkkkh
+__init__ INFO 2019-11-08 13:52:26,362 - create task: name - mkkkkh
+__init__ INFO 2019-11-08 15:28:31,668 - create task: name - task5
+__init__ INFO 2019-11-08 15:28:31,701 - create task: name - task5
+__init__ INFO 2019-11-08 15:46:00,555 - create task: name - task5
