@@ -1,10 +1,10 @@
 import hashlib
 
-from logger import  LOGGER
+from logger import LOGGER
 from src.task_list import TaskList
 from src.main_class import MainClass
 from helpers.checker import is_valid_email, is_valid_name, is_valid_password, is_valid_age
-from helpers.consts import DEV_LIST, TASK_LIST
+from helpers.consts import DEV_LIST, TASK_LIST, PROJ_LIST
 
 
 # Юзменяемые типы не используй в аргументах
@@ -20,11 +20,13 @@ class Dev(MainClass):
         :param task:
         """
         super().__init__()
+        self.task = task
         self.all_tasks = TaskList({})
         self.task_in_progress = TaskList({})
         self.task_resolve = TaskList({})
         self.task_done = TaskList({})
         self.task_to_do = TaskList({})
+        self.projects = {}
         if is_valid_email(email):
             self.email = email
         else:
@@ -99,14 +101,14 @@ class Dev(MainClass):
         else:
             raise ValueError('New password is not valid')
 
-    def add_task(self, task):
-        if isinstance(task, list):
-            for one in task:
+    def add_task(self, task_uid):
+        if isinstance(task_uid, list):
+            for one in task_uid:
                 self.all_tasks.add_task(one)
                 self.task_to_do.add_task(one)
         else:
-            self.all_tasks.add_task(task)
-            self.task_to_do.add_task(task)
+            self.all_tasks.add_task(task_uid)
+            self.task_to_do.add_task(task_uid)
 
     def remove_tasks(self, task, is_deleted_at_all=False):
         if isinstance(task, list):
@@ -157,3 +159,6 @@ class Dev(MainClass):
             task.trek_time += task.updated_at - temp_time
         self.remove_tasks(task)
         self.task_to_do.add_task(task)
+
+    def add_project(self, project_uid):
+        self.projects[project_uid] = PROJ_LIST[project_uid]

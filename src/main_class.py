@@ -1,4 +1,5 @@
 import datetime
+import hashlib
 from abc import ABC
 
 
@@ -6,6 +7,8 @@ class MainClass(ABC):
     def __init__(self):
         self.created_at = datetime.datetime.now()
         self.updated_at = 'Not changed'
+        # self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
+
 
     def __str__(self):
         return f'{self.created_at}, {self.updated_at}'

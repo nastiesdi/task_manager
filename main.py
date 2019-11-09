@@ -15,7 +15,7 @@ def parse_args():
     '''
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers()
-    reg_parser = subparsers.add_parser('reg_user')
+    reg_parser = subparsers.add_parser('reg_user', help='jjj')
     reg_parser.add_argument('-e', '--email', type=str, help='The email must match the mask aa@ja.ar')
     reg_parser.add_argument('-p', '--password', type=str, help='Password must contain from 5 to 25 characters, at least'
                                                                ' 1 character of upper case, lower case and number ')
@@ -31,34 +31,76 @@ def parse_args():
     login_parser.set_defaults(func=manager.login)
     # email, old_password, new_password, repeat_new_password)
 
-    change_password_pars = subparsers.add_parser('change_password')
+    change_password = subparsers.add_parser('change_password')
     # change_password_pars.add_argument('-e', '--email')
-    change_password_pars.add_argument('-o', '--old_password')
-    change_password_pars.add_argument('-n', '--new_password')
-    change_password_pars.add_argument('-r', '--repeat_new_password')
-    change_password_pars.set_defaults(func=manager.change_password)
+    change_password.add_argument('-o', '--old_password', help='Old password must match current dev\'s password')
+    change_password.add_argument('-n', '--new_password', help='Password must contain from 5 to 25 characters, at'
+                                                              ' least 1 character of upper case, lower case and number')
+    change_password.add_argument('-r', '--repeat_new_password', help='Password and repeat password must match')
+    change_password.set_defaults(func=manager.change_password)
 
+    create_task = subparsers.add_parser('create_task')
+    create_task.add_argument('-n', '--name', help='Please, enter task\'s name')
+    create_task.add_argument('-p', '--priority', choices=PRIORITY, help='Please, enter available priority')
+    create_task.add_argument('-r', '--project', default=None, choices=manager.projects.keys(),
+                             help='Please, choose one of available project')
+    create_task.add_argument('-e', '--executor', default=None, choices=manager.developers.keys())
+    create_task.add_argument('-s', '--status', default='To do', choices=STATUS_LIST)
+    create_task.add_argument('-t', '--sub_tasks', default=None, nargs='*', choices=manager.tasks,
+                             help='If you wont you can add sub tasks to task ')
+    create_task.set_defaults(func=manager.create_task)
+
+    create_project = subparsers.add_parser('create_project')
+    create_project.add_argument('-n', '--name')
+    create_project.add_argument('-d', '--dev', nargs='*', choices=manager.developers.keys(),
+                                help='You can add developers to the project, just use their email.'
+                                     ' You have to choose it from existing developers')
+    create_project.set_defaults(func=manager.create_project)
+
+    add_task = subparsers.add_parser('add_task')
+    add_task.add_argument('-e', '--email', default=None, choices=manager.developers.keys())
+    add_task.add_argument('-t', '--task_uid')
+    add_task.set_defaults(func=manager.add_task_to_dev)
+
+    add_dev_to_proj = subparsers.add_parser('add_dev_to_proj')
+    add_dev_to_proj.add_argument('-e', '--email', choices=manager.developers.keys())
+    add_dev_to_proj.add_argument('-p', '--project_uid', choices=manager.projects.keys())
+    add_dev_to_proj.set_defaults(func=manager.add_dev_to_project)
 
     args = parser.parse_args()
     if 'func' in args:
         args.func(args)
-        # print(args)
 
 
 def main():
-
-    # parse_args()
-    dev1 = Dev(email='dev@hn', password='123456Qq', repeat_password='123456Qq', first_name='Alexander',
-               last_name='Gubin', age=21)
-    dev1.add_to_dev_list()
-    manager.developers[dev1.email] = dev1
+    """В следубщей строке считываются аргументы из терминала"""
     parse_args()
-    task1 = Task('create_database', 'Medium')
+    # manager.clean_project()
 
+    """Сохранение изменений"""
+    manager.dump_devs()
+    manager.dump_current_dev()
+    manager.dump_projects()
+    manager.dump_tasks()
+
+    """ Отображение всех девов, проектов и тасков"""""
+    print('@@@@@@@@ developers @@@@@@@@@')
+    for one in manager.developers.values():
+        print(one.email + '   ' + str(one.projects) + '    ' + str(one.all_tasks))
+    print('\n@@@@@@@@@@@ projects @@@@@@@@@@@@')
+    for one in manager.projects.values():
+        print(str(one.name) + '   ' + str(one.dev) + '  ' + str(one.task) + '   ' + one.uid)
+    print('\n@@@@@@@@@@@ tasks @@@@@@@@@@@@')
+    for one in manager.tasks.values():
+        print(str(one.name) + '  ' + str(one.project) + '  ' + str(one.executor.email) + '  ' + str(one.uid) +
+              'sub tasks: ' + str(one.sub_tasks))
 
 
 if __name__ == '__main__':
     manager = Manager()
-    # with open('login.pkl', 'rb') as infile:
-    #     manager = pickle.load(infile)
+    manager.load_devs()
+    manager.load_current_dev()
+    manager.load_project()
+    manager.load_tasks()
+    manager.add_const()
     main()
