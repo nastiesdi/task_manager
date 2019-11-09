@@ -1,16 +1,20 @@
+import hashlib
+
 from src.main_class import MainClass
-from helpers.consts import PROJ_LIST
+from helpers.consts import PROJ_LIST, DEV_LIST
 
 
 class Project(MainClass):
-    def __init__(self, name_project, task=[], dev=None):
+    def __init__(self, name, task=[], dev=None):
         super().__init__()
-        self.name_project = name_project
+        self.name = name
         self.task = task
+        self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
         self.dev = dev
+        PROJ_LIST[self.uid] = self
 
     def __str__(self):
-        return f'Name project: {self.name_project}'
+        return f'Name project: {self.name}'
 
     def add_task_to_project(self, task):
         if isinstance(task, list):
@@ -26,6 +30,9 @@ class Project(MainClass):
         return display
 
     def add_to_proj_list(self):
-        PROJ_LIST[self.name_project] = self
+        PROJ_LIST[self.name] = self
+
+    def add_dev(self, email):
+        self.dev.append(email)
 
 

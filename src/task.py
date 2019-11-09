@@ -1,25 +1,32 @@
 import datetime
 import hashlib
 
+from logger import TASK_LOG
 from helpers.consts import STATUS_LIST, PRIORITY, TASK_LIST
 from src.main_class import MainClass
 
 
 class Task(MainClass):
-    def __init__(self, name, priority, project=None, executor=None, status='To do', sub_tasks=None):
+    def __init__(self, name, priority, project=None, executor=None, status='To do', sub_tasks_uid=None):
         super().__init__()
         self.name = name
         self.executor = executor
         self.project = project
-        self.trek_time = datetime.timedelta()
+        self.trek_time = datetime.timedelta() # track_time refactor
         self.status = status
         self.priority = PRIORITY[priority]
         self.track_time = datetime.timedelta()
         self.status = STATUS_LIST[status]
         self.sub_tasks = {}
+        if isinstance(sub_tasks_uid, list):
+            for each in sub_tasks_uid:
+                self.sub_tasks[each]=TASK_LIST[each]
+        else:
+            self.sub_tasks[sub_tasks_uid] = TASK_LIST[sub_tasks_uid]
         self.name_sub_tasks = []
         self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
-        TASK_LIST[self.name] = self
+        TASK_LIST[self.uid] = self
+        TASK_LOG.info(f'create task: name - {name}')
 
     def __str__(self):
         task_info_list = []
@@ -35,7 +42,7 @@ class Task(MainClass):
         return display
 
     def add_to_tasklist(self):
-        TASK_LIST[self.name] = self
+        TASK_LIST[self.uid] = self
 
     def add_sub_tasks(self, new_sub_task):
         if isinstance(new_sub_task, list):
@@ -46,9 +53,10 @@ class Task(MainClass):
 
     def show_all_sub_tasks(self):
         self.name_sub_tasks = []
+
         def add_sub_task(task):
             for sub_task in task.sub_tasks.values():
-                self.name_sub_tasks.append(sub_task.name)
+                self.name_sub_tasks.append(sub_task.name)  # uid везде нужны, ты получаешь везде все по юидам, должны быть единая система в проекте, ты не моежшь в одном месте получать инфу по юидам а в потом в другом месте взять и сделать ключом имя
                 if sub_task.sub_tasks:
                     add_sub_task(sub_task)
         return self.name_sub_tasks
@@ -90,6 +98,9 @@ class Task(MainClass):
     """
     Следующий метод используется как внутренний для другого, 
     отдельно использование не рекомендуется
+    
+    Если у тебя получилась такая ситуация, когда тебе нужно сделать какой либо метод приватный - знаит ты делаешь что то неправильно
+    Нужно избавиться от этого
     """
 
     def remove_all_subt_not_use(self, task):
@@ -97,7 +108,12 @@ class Task(MainClass):
             for i in list(task.sub_tasks.values()):
                 del task.sub_tasks[i.uid]
                 task.remove_all_subt_not_use(i)
-
+    '''
+        Смысл этой гтуки был в том, что когда ты ыведешь инфу о таске, например, и у тебя вылетят юиды каких либо тасков 
+        следом, например сабтасков и на, например, захотела унать инфу об этом сабтаске, ты скопировала этот юид из 
+        терминала, скормила его этой функции и получила инфу, и так вообще с любым таском, сейчас так не раотает
+        сейчс он привязан к конкретному таску
+    '''
     def show_full_info_task(self):
         task_info_list = []
         for key in self.__dict__.keys():
@@ -120,8 +136,9 @@ class Task(MainClass):
 
     def change_task(self, task_executor=None, new_priority=None):
         if task_executor:
-            self.executor = task_executor  # тут нужно проверить есть ли такой разработчик, а так добавление работает!!
-        self.priority = PRIORITY[new_priority]
+            self.executor = task_executor
+        if new_priority:
+            self.priority = PRIORITY[new_priority]
 
     def change_status_on_to_do(self):
         self.status = STATUS_LIST['To do']
