@@ -1,4 +1,6 @@
+
 from src.main_class import MainClass
+# from helpers.consts import TASK_LIST
 
 
 class TaskList(MainClass):
@@ -14,8 +16,8 @@ class TaskList(MainClass):
             display += str(num) + ': ' + str(name) + '\n'
         return display
 
-    def add_task(self, task):
-        self.tasks[task.uid] = task
+    # def add_task(self, uid):
+    #     self.tasks[uid] = TASK_LIST[uid]
 
     def remove_task(self, task):
         del self.tasks[task.uid]

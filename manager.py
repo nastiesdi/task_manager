@@ -1,13 +1,15 @@
 import argparse
 import pickle
+import jsonpickle
+import json
 import os
 
-from logger import LOGGER
+from logger import _get_logger
 from helpers.checker import is_valid_email, is_valid_password, is_valid_name
 from src.dev import Dev
 from src.task import Task
 from src.project import Project
-from helpers.consts import STATUS_LIST, PROJ_LIST, PRIORITY, DEV_LIST, TASK_LIST
+# from helpers.consts import STATUS_LIST, PROJ_LIST, PRIORITY, DEV_LIST, TASK_LIST
 
 '''
     Ща раберешься с авторизацией и логином, прикрути сюда еще логгер, на эти два метода, все остальные по аалогии.
@@ -19,33 +21,36 @@ from helpers.consts import STATUS_LIST, PROJ_LIST, PRIORITY, DEV_LIST, TASK_LIST
 
 
 class Manager:
-    def __init__(self):
+    def __init__(self, database_folder=None, users_file=None, cur_user_file=None, project_folder=None, log_file=None):
         self.developers = {}
         self.current_dev = None
         self.tasks = {}
         self.projects = {}
-        # for each in self.developers.keys():
-        #     DEV_LIST[each] = self.developers[each]
-        for each in self.projects.keys():
-            PROJ_LIST[each] = self.projects[each]
+        self.logger = _get_logger()
+        if log_file:
+            self.log_file = log_file
+        else:
+            self.log_file = 'log.log'
+        self.load_tasks()
+        self.load_project()
+        self.load_current_dev()
+        self.load_devs()
 
-    def add_const(self):
-        for each in self.projects.keys():
-            PROJ_LIST[each] = self.projects[each]
-        for each in self.developers.keys():
-            DEV_LIST[each] = self.developers[each]
-        for each in self.tasks.keys():
-            TASK_LIST[each] = self.tasks[each]
 
     def registration(self, args):
         if args.email not in self.developers:
             dev = Dev(email=args.email, repeat_password=args.repeat_password, password=args.password,
                       first_name=args.first_name, last_name=args.last_name, age=args.age)
             if dev:
+                print("!!!!!!")
+                print(type(dev))
+                print(self.developers)
+                print('!!!!!!!!!!')
+
                 self.developers[dev.email] = dev
         else:
             raise ValueError('This email is already in use')
-        LOGGER.info(f'create Employee: {args.email}, First name: {args.first_name} ')
+        self.logger.info(f'create Employee: {args.email}, First name: {args.first_name} ')
 
     def login(self, args):
         if args.email in self.developers:
@@ -54,56 +59,56 @@ class Manager:
             else:
                 raise ValueError('Input password is not correct')
         else:
-            LOGGER.warning(f'User cant register/ Input data: email - {args.email}, password - {args.password} ')
+            # LOGGER.warning(f'User cant register/ Input data: email - {args.email}, password - {args.password} ')
             raise ValueError('Developer doesn\'t exist')
 
     def change_password(self, args):
-        if self.current_dev:
-            print('sssssss')
-            print(self.current_dev.password)
-            print(self.current_dev)
-            self.current_dev.change_password(old_password=args.old_password, new_password=args.new_password,
-                                             repeat_new_password=args.repeat_new_password)
-        else:
-            raise Exception('Please login')
+        if not self.current_dev:
+            raise ValueError('Tets')
+        print('sssssss')
+        print(self.current_dev.password)
+        print(self.current_dev)
+        self.current_dev.change_password(old_password=args.old_password, new_password=args.new_password,
+                                         repeat_new_password=args.repeat_new_password)
 
     def create_task(self, args):
-        task = Task(name=args.name, priority=args.priority,
-                    project=self.projects[args.project] if args.project else None,
-                    executor=self.developers[args.executor] if args.executor else None,
-                    status=args.status, sub_tasks_uid=args.sub_tasks)
+        task = Task(name=args.name,
+                    priority=args.priority,
+                    project=args.project if args.project else None,
+                    executor=args.executor if args.executor else None,
+                    status=args.status,
+                    sub_tasks_uid=args.sub_tasks)
         self.tasks[task.uid] = task
         if task.executor:
+            self.developers[task.executor].all_task[task.uid] = task
             task.executor.add_task(task.uid)
-        if task.project:
-            task.project.add_task_to_project(task.uid)
 
     def create_project(self, args):
         project = Project(name=args.name, dev=args.dev)
         self.projects[project.uid] = project
-        if args.dev:
-            for one in args.dev:
-                self.developers[one].add_project(project.uid)
+
 
     def change_project(self, args):
         pass
 
     def add_task_to_dev(self, args):
-        if self.current_dev:  # Перепиши чуть по лучше, условие
-            if args.email:
-                self.developers[args.email].add_task(args.task_uid)
-                TASK_LIST[args.task_uid].change_task(task_executor=self.developers[args.email])
-
-            else:
-                self.current_dev.add_task(args.task_uid)
-                TASK_LIST[args.task_uid].change_task(task_executor=self.current_dev)
-        else:
-            raise Exception('Please login')
+        pass
+        # if self.current_dev:  # Перепиши чуть по лучше, условие
+        #     if args.email:
+        #         self.developers[args.email].add_task(args.task_uid)
+        #         self.tasks[args.task_uid].change_task(task_executor=self.developers[args.email])
+        #
+        #     else:
+        #         self.current_dev.add_task(args.task_uid)
+        #         self.tasks[args.task_uid].change_task(task_executor=self.current_dev)
+        # else:
+        #     raise Exception('Please login')
 
     def add_dev_to_project(self, args):
-        print(self.developers.keys())
-        self.projects[args.project_uid].add_dev(args.email)
-        self.developers[args.email].add_project(args.project_uid)
+        pass
+        # # print(self.developers.keys())
+        # self.projects[args.project_uid] = args
+        # self.developers[args.email] = args
 
     def remove_task_from_dev(self, dev, task):
         pass
@@ -124,49 +129,41 @@ class Manager:
         pass
 
     def load_devs(self):
-        try:
-            with open('searilization/devs.pkl', 'rb') as infile:
-                self.developers = pickle.load(infile)
-        except EOFError:
-            return {}
+        if os.path.exists('data/devs.json'):
+            with open('data/devs.json', 'r') as infile:
+                self.developers = jsonpickle.decode(infile.readline())
 
     def load_current_dev(self):
-        try:
-            with open('searilization/session.pkl', 'rb') as infile:
-                self.current_dev = pickle.load(infile)
-        except EOFError:
-            return {}
+        if os.path.exists('data/session.json'):
+            with open('data/session.json', 'r') as infile:
+                self.current_dev = jsonpickle.decode(infile.readline())
 
     def load_tasks(self):
-        try:
-            with open('searilization/tasks.pkl', 'rb') as infile:
-                self.tasks = pickle.load(infile)
-        except EOFError:
-            return {}
+        if os.path.exists('data/tasks.json'):
+            with open('data/tasks.json', 'r') as infile:
+                self.tasks = jsonpickle.decode(infile.readline())
 
     def load_project(self):
-        try:
-            with open('searilization/projects.pkl', 'rb') as infile:
-                self.projects = pickle.load(infile)
-        except EOFError:
-            return {}
+        if os.path.exists('data/project.json'):
+            with open('data/project.json', 'r') as infile:
+                self.tasks = jsonpickle.decode(infile.readline())
+
+    def save_devs(self):
+        with open('data/devs.json', 'tw') as outfile:
+            outfile.write(jsonpickle.encode(self.developers))
 
 
-    def dump_devs(self):
-        with open('searilization/devs.pkl', 'wb') as outfile:
-            pickle.dump(self.developers, outfile, pickle.HIGHEST_PROTOCOL)
+    def save_current_dev(self):
+        with open('data/session.json', 'tw') as outfile:
+            outfile.write(jsonpickle.encode(self.current_dev))
 
-    def dump_current_dev(self):
-        with open('searilization/session.pkl', 'wb') as outfile:
-            pickle.dump(self.current_dev, outfile, pickle.HIGHEST_PROTOCOL)
+    def save_tasks(self):
+        with open('data/tasks.json', 'tw') as outfile:
+            outfile.write(jsonpickle.encode(self.tasks))
 
-    def dump_tasks(self):
-        with open('searilization/tasks.pkl', 'wb') as outfile:
-            pickle.dump(self.tasks, outfile, pickle.HIGHEST_PROTOCOL)
-
-    def dump_projects(self):
-        with open('searilization/projects.pkl', 'wb') as outfile:
-            pickle.dump(self.projects, outfile, pickle.HIGHEST_PROTOCOL)
+    def save_projects(self):
+        with open('data/projects.json', 'tw') as outfile:
+            outfile.write(jsonpickle.encode(self.projects))
 
     def clean_project(self):
         self.tasks = {}

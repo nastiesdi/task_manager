@@ -1,7 +1,6 @@
 import hashlib
 
 from src.main_class import MainClass
-from helpers.consts import PROJ_LIST, DEV_LIST
 
 
 class Project(MainClass):
@@ -30,7 +29,8 @@ class Project(MainClass):
         return display
 
     def add_to_proj_list(self):
-        PROJ_LIST[self.name] = self
+        pass
+        # PROJ_LIST[self.name] = self
 
     def add_dev(self, email):
         self.dev.append(email)
