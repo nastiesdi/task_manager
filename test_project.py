@@ -103,5 +103,7 @@ from helpers.consts import STATUS_LIST, PROJ_LIST, PRIORITY, DEV_LIST, TASK_LIST
 # python main.py change_password -o 123456Qq -n 221122Qq -r 221122Qq
 # python main.py reg_user -e developer@hn -p 123456Qq -r 123456Qq -f sdsdc -l dasdasd -a 22
 # python main.py login -e developer@hn -p 123456Qq
+# python main.py create_task -n new_task -p High
+
 
 # python main.py add_dev_to_proj -e user@hn -p 4a35ce08b8

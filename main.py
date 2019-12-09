@@ -6,7 +6,7 @@ from src.dev import Dev
 from src.task import Task
 from src.project import Project
 from manager import Manager
-from helpers.consts import STATUS_LIST, PRIORITY
+from helpers.consts import STATUS_LIST, PRIORITY, FOLDER_NAME, FILE_NAME, LOG_FILE_NAME
 
 
 def parse_args():
@@ -43,7 +43,7 @@ def parse_args():
     create_task = subparsers.add_parser('create_task')
     create_task.add_argument('-n', '--name', help='Please, enter task\'s name')
     create_task.add_argument('-p', '--priority', choices=PRIORITY, help='Please, enter available priority')
-    create_task.add_argument('-r', '--project', default=None, choices=manager.projects.keys(),
+    create_task.add_argument('-r', '--project', default=None,
                              help='Please, choose one of available project')
     create_task.add_argument('-e', '--executor', default=None)
     create_task.add_argument('-s', '--status', default='To do', choices=STATUS_LIST)
@@ -65,7 +65,7 @@ def parse_args():
 
     add_dev_to_proj = subparsers.add_parser('add_dev_to_proj')
     add_dev_to_proj.add_argument('-e', '--email')
-    add_dev_to_proj.add_argument('-p', '--project_uid', choices=manager.projects.keys())
+    add_dev_to_proj.add_argument('-p', '--project_uid')
     add_dev_to_proj.set_defaults(func=manager.add_dev_to_project)
 
     args = parser.parse_args()
@@ -99,6 +99,8 @@ def main():
 
 
 if __name__ == '__main__':
-    manager = Manager()
+    manager = Manager(database_folder=FOLDER_NAME['data'], users_file=FILE_NAME['devs'],
+                      cur_user_file=FILE_NAME['login'], project_file=FILE_NAME['projects'],
+                      tasks_file=FILE_NAME['tasks'])
     # manager.clean_project()
     main()

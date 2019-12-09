@@ -1,0 +1,9 @@
+load_tasks INFO 2019-12-09 18:16:45,037 - File is no exist 
+load_project INFO 2019-12-09 18:16:45,037 - File is no exist 
+load_current_dev INFO 2019-12-09 18:16:45,037 - File is no exist 
+load_devs INFO 2019-12-09 18:16:45,037 - File is no exist 
+registration INFO 2019-12-09 18:16:45,041 - create Employee: deûv@hn, First name: sdsdc 
+save_devs INFO 2019-12-09 18:16:45,042 - Devs saved: {'deûv@hn': <src.dev.Dev object at 0x0000016E2C8E21C8>}
+save_current_dev INFO 2019-12-09 18:16:45,042 - login: None
+save_projects INFO 2019-12-09 18:16:45,043 - Projects saved: {}
+save_tasks INFO 2019-12-09 18:16:45,043 - Tasks saved: {}
