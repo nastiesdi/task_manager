@@ -4,7 +4,7 @@ import hashlib
 from logger import _get_logger
 from helpers.consts import STATUS_LIST, PRIORITY
 from src.main_class import MainClass
-
+from src.task_list import TaskList
 
 class Task(MainClass):
     def __init__(self, name, priority, project=None, executor=None, status='To do', sub_tasks_uid=None):
@@ -18,16 +18,15 @@ class Task(MainClass):
         self.track_time = datetime.timedelta()
         self.status = STATUS_LIST[status]
         self.sub_tasks = {}
-        self.name_sub_tasks = []
+        self.name_sub_tasks = TaskList({})
         self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
-        # TASK_LOG.info(f'create task: name - {name}')
 
     def __str__(self):
         task_info_list = []
         key_output_list = ['name', 'status', 'executor', 'priority']
         for key in self.__dict__.keys():
             if key == 'executor' and self.__dict__[key]:
-                task_info_list.append(str(key) + ': ' + str(self.__dict__[key].email))
+                task_info_list.append(str(key) + ': ' + str(self.__dict__[key]))
             elif key in key_output_list and self.__dict__[key]:
                 task_info_list.append(str(key) + ': ' + str(self.__dict__[key]))
         display = 'Tasks info:\n'
@@ -38,9 +37,9 @@ class Task(MainClass):
     def add_sub_tasks(self, new_sub_task):
         if isinstance(new_sub_task, list):
             for task in new_sub_task:
-                self.sub_tasks[task.uid] = task
+                self.sub_tasks[task] = task
         else:
-            self.sub_tasks[new_sub_task.uid] = new_sub_task
+            self.sub_tasks[new_sub_task] = new_sub_task
 
     def show_all_sub_tasks(self):
         self.name_sub_tasks = []

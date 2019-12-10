@@ -27,7 +27,7 @@ def parse_args():
     reg_parser.set_defaults(func=manager.registration)
 
     login_parser = subparsers.add_parser('login')
-    login_parser.add_argument('-e', '--email', help='The entered email must be contained in the database')
+    login_parser.add_argument('-e', '--email', choices=manager.developers, help='The entered email must be contained in the database')
     login_parser.add_argument('-p', '--password', help='Password must be valid for the entered email')
     login_parser.set_defaults(func=manager.login)
     # email, old_password, new_password, repeat_new_password)
@@ -43,25 +43,39 @@ def parse_args():
     create_task = subparsers.add_parser('create_task')
     create_task.add_argument('-n', '--name', help='Please, enter task\'s name')
     create_task.add_argument('-p', '--priority', choices=PRIORITY, help='Please, enter available priority')
-    create_task.add_argument('-r', '--project', default=None,
+    create_task.add_argument('-r', '--project', default=None, choices=manager.projects,
                              help='Please, choose one of available project')
-    create_task.add_argument('-e', '--executor', default=None)
+    create_task.add_argument('-e', '--executor', default=None, choices=manager.developers)
     create_task.add_argument('-s', '--status', default='To do', choices=STATUS_LIST)
     create_task.add_argument('-t', '--sub_tasks', default=None, nargs='*', choices=manager.tasks,
                              help='If you wont you can add sub tasks to task ')
     create_task.set_defaults(func=manager.create_task)
 
+    change_task = subparsers.add_parser('change_task')
+    change_task.add_argument('-u', '--uid', choices=manager.tasks, help='Please, choose one of tasks')
+    change_task.add_argument('-e', '--executor', choices=manager.developers, help='Choose one of developers')
+    change_task.add_argument('-r', '--project', choices=manager.projects, help='Choose one of projects')
+    change_task.add_argument('-p', '--priority', choices=PRIORITY, help='Please, enter new priority')
+    change_task.add_argument('-t', '--sub_tasks', default=None, nargs='*', choices=manager.tasks,
+                             help='If you wont you can add sub tasks to task ')
+    change_task.add_argument('-s', '--status', choices=STATUS_LIST)
+    change_task.set_defaults(func=manager.change_task)
+
     create_project = subparsers.add_parser('create_project')
     create_project.add_argument('-n', '--name')
-    create_project.add_argument('-d', '--dev', nargs='*',
+    create_project.add_argument('-d', '--dev', nargs='*', choices=manager.developers,
                                 help='You can add developers to the project, just use their email.'
                                      ' You have to choose it from existing developers')
+    create_project.add_argument('-t', '--tasks', choices=manager.tasks, nargs='*', help='Please, input project\'s task')
     create_project.set_defaults(func=manager.create_project)
 
     add_task = subparsers.add_parser('add_task')
     add_task.add_argument('-e', '--email', default=None)
     add_task.add_argument('-t', '--task_uid')
     add_task.set_defaults(func=manager.add_task_to_dev)
+
+    show_all_task = subparsers.add_parser('show_all_task')
+    show_all_task.set_defaults(func=manager.show_all_task)
 
     add_dev_to_proj = subparsers.add_parser('add_dev_to_proj')
     add_dev_to_proj.add_argument('-e', '--email')
@@ -85,17 +99,17 @@ def main():
     manager.save_tasks()
 
     """ Отображение всех девов, проектов и тасков"""""
-    print('@@@@@@@@ developers @@@@@@@@@')
-    for one in manager.developers.values():
-        print(one)
-        # print(one.email + '   ' + str(one.projects) + '    ' + str(one.all_tasks))
-    print('\n@@@@@@@@@@@ projects @@@@@@@@@@@@')
-    for one in manager.projects.values():
-        print(str(one.name) + '   ' + str(one.dev) + '  ' + str(one.task) + '   ' + one.uid)
-    print('\n@@@@@@@@@@@ tasks @@@@@@@@@@@@')
-    for one in manager.tasks.values():
-        print(str(one.name) + '  ' + str(one.project) + '  ' + (str(one.executor.email) if one.executor else '@@@') + '  ' + str(one.uid) +
-              'sub tasks: ' + str(one.sub_tasks))
+    # print('@@@@@@@@ developers @@@@@@@@@')
+    # for one in manager.developers.values():
+    #     print(one)
+    #     print(one.email + '   ' + str(one.projects) + '    ' + (str(one.all_tasks) if one.all_tasks else None))
+    # print('\n@@@@@@@@@@@ projects @@@@@@@@@@@@')
+    # for one in manager.projects.values():
+    #     print(str(one.name) + '   ' + str(one.dev) + '  ' + str(one.tasks) + '   ' + one.uid)
+    # print('\n@@@@@@@@@@@ tasks @@@@@@@@@@@@')
+    # for one in manager.tasks.values():
+    #     print(str(one.name) + '  ' + str(one.project) + '  ' + (str(one.executor.email) if one.executor else '@@@') + '  ' + str(one.uid) +
+    #           'sub tasks: ' + str(one.sub_tasks))
 
 
 if __name__ == '__main__':

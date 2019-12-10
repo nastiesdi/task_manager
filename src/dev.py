@@ -9,7 +9,7 @@ from helpers.checker import is_valid_email, is_valid_name, is_valid_password, is
 
 # Юзменяемые типы не используй в аргументах
 class Dev(MainClass):
-    def __init__(self, email, password, repeat_password, first_name, last_name, age, task=None):
+    def __init__(self, email, password, repeat_password, first_name, last_name, age):
         """
         :param email: maska fff@hh.hh
         :param password: cdcdcddcdc
@@ -20,7 +20,6 @@ class Dev(MainClass):
         :param task:
         """
         super().__init__()
-        self.task = task
         self.all_tasks = TaskList({})
         self.task_in_progress = TaskList({})
         self.task_resolve = TaskList({})
@@ -30,41 +29,35 @@ class Dev(MainClass):
         if is_valid_email(email):
             self.email = email
         else:
-            # LOGGER.error(f'Try to create Employee using not valid email: {email}')# А здесьзачем логгер?  я тебе рассказывала, чтобы понять с какими данными люди не могут зарегаться, так ты входные данные можешь получить из метода в менеджере, и их залогировать? ну офкну норм не удаляй эту строку)
             raise Exception('Email is not valid')
         if is_valid_password(password):
             if password == repeat_password:
                 self.password = password
             else:
-                # LOGGER.error(f'Try to create Employee using not match password: {password} - {repeat_password}')
                 raise ValueError('Passwords are not match')
         else:
-            # LOGGER.error(f'Try to create Employee using not valid password: {password}')
             raise Exception('Password is not valid')
         if is_valid_name(first_name):
             self.first_name = first_name
         else:
-            # LOGGER.error(f'Try to create Employee using not valid first name: {first_name}')
             raise ValueError('First name must be between 2 and 15 latin characters')
         if is_valid_name(last_name):
             self.last_name = last_name
         else:
-            # LOGGER.error(f'Try to create Employee using not valid last name: {last_name}')
             raise ValueError('Last name must be between 2 and 15 latin characters')
         if is_valid_age(age):
             self.age = age
         else:
-            # LOGGER.error(f'Try to create Employee using age: {age}')
             raise ValueError('Age must be between 16 and 100')
         self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
-        # if task:
-        #     if isinstance(task, list):
-        #         for one in task: # for task in tasks?
+        # if tasks:
+        #     if isinstance(tasks, list):
+        #         for one in tasks: # for task in tasks?
         #             self.all_tasks.add_task(one)
         #             self.task_to_do.add_task(one)
         #     else:
-        #         self.all_tasks.add_task(task)
-        #         self.task_to_do.add_task(task)  do it from manager
+        #        self.all_tasks.add_task(tasks)
+        #     self.task_to_do.add_task(tasks)
 
     def __str__(self):
         task_info_list = []
@@ -98,35 +91,35 @@ class Dev(MainClass):
         else:
             raise ValueError('New password is not valid')
 
-    def add_task(self, task_uid):
-        pass
-        # if isinstance(task_uid, list):
-        #     for one in task_uid:
-        #         self.all_tasks.add_task(one)
-        #         self.task_to_do.add_task(one)
-        # else:
-        #     self.all_tasks.add_task(task_uid)
-        #     self.task_to_do.add_task(task_uid)
+    def add_task(self, task):
+        if isinstance(task, list):
+            for one in task:
+                self.all_tasks.add_task(one)
+                self.task_to_do.add_task(one)
+        else:
+            self.all_tasks.add_task(task)
+            self.task_to_do.add_task(task)
 
     def remove_tasks(self, task, is_deleted_at_all=False):
         if isinstance(task, list):
             for t in task:
-                if t.uid in self.task_to_do.tasks:
+                if t in self.task_to_do.tasks:
                     self.task_to_do.remove_task(t)
-                if t.uid in self.task_in_progress.tasks:
+                if t in self.task_in_progress.tasks:
                     self.task_in_progress.remove_task(t)
-                if t.uid in self.task_resolve.tasks:
+                if t in self.task_resolve.tasks:
                     self.task_resolve.remove_task(t)
-                if t.uid in self.task_done.tasks:
+                if t in self.task_done.tasks:
                     self.task_done.remove_task(t)
         else:
-            if task.uid in self.task_to_do.tasks:
+            print(task)
+            if task in self.task_to_do.tasks:
                 self.task_to_do.remove_task(task)
-            if task.uid in self.task_in_progress.tasks:
+            if task in self.task_in_progress.tasks:
                 self.task_in_progress.remove_task(task)
-            if task.uid in self.task_resolve.tasks:
+            if task in self.task_resolve.tasks:
                 self.task_resolve.remove_task(task)
-            if task.uid in self.task_done.tasks:
+            if task in self.task_done.tasks:
                 self.task_done.remove_task(task)
         if is_deleted_at_all:
             self.all_tasks.remove_task(task)

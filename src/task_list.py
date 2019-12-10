@@ -12,15 +12,17 @@ class TaskList(MainClass):
 
     def __str__(self):
         display = ''
-        for num, name in enumerate([task.name for task in self.tasks.values()], start=1):
-            display += str(num) + ': ' + str(name) + '\n'
-        return display
+        print(self.tasks.values())
+        if self.tasks.values():
+            for num, name in enumerate([task.name for task in self.tasks.values()], start=1):
+                display += str(num) + ': ' + str(name) + '\n'
+            return display
 
-    # def add_task(self, uid):
-    #     self.tasks[uid] = TASK_LIST[uid]
+    def add_task(self, task):
+        self.tasks[task] = task
 
     def remove_task(self, task):
-        del self.tasks[task.uid]
+        del self.tasks[task]
 
     def get_all_task(self):
         str_all_task = ''
