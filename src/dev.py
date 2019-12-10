@@ -1,10 +1,10 @@
 import hashlib
 
-from logger import LOGGER
+from logger import _get_logger
 from src.task_list import TaskList
 from src.main_class import MainClass
 from helpers.checker import is_valid_email, is_valid_name, is_valid_password, is_valid_age
-from helpers.consts import DEV_LIST, TASK_LIST, PROJ_LIST
+
 
 
 # Юзменяемые типы не используй в аргументах
@@ -30,41 +30,41 @@ class Dev(MainClass):
         if is_valid_email(email):
             self.email = email
         else:
-            LOGGER.error(f'Try to create Employee using not valid email: {email}')
+            # LOGGER.error(f'Try to create Employee using not valid email: {email}')# А здесьзачем логгер?  я тебе рассказывала, чтобы понять с какими данными люди не могут зарегаться, так ты входные данные можешь получить из метода в менеджере, и их залогировать? ну офкну норм не удаляй эту строку)
             raise Exception('Email is not valid')
         if is_valid_password(password):
             if password == repeat_password:
                 self.password = password
             else:
-                LOGGER.error(f'Try to create Employee using not match password: {password} - {repeat_password}')
+                # LOGGER.error(f'Try to create Employee using not match password: {password} - {repeat_password}')
                 raise ValueError('Passwords are not match')
         else:
-            LOGGER.error(f'Try to create Employee using not valid password: {password}')
+            # LOGGER.error(f'Try to create Employee using not valid password: {password}')
             raise Exception('Password is not valid')
         if is_valid_name(first_name):
             self.first_name = first_name
         else:
-            LOGGER.error(f'Try to create Employee using not valid first name: {first_name}')
+            # LOGGER.error(f'Try to create Employee using not valid first name: {first_name}')
             raise ValueError('First name must be between 2 and 15 latin characters')
         if is_valid_name(last_name):
             self.last_name = last_name
         else:
-            LOGGER.error(f'Try to create Employee using not valid last name: {last_name}')
+            # LOGGER.error(f'Try to create Employee using not valid last name: {last_name}')
             raise ValueError('Last name must be between 2 and 15 latin characters')
         if is_valid_age(age):
             self.age = age
         else:
-            LOGGER.error(f'Try to create Employee using age: {age}')
+            # LOGGER.error(f'Try to create Employee using age: {age}')
             raise ValueError('Age must be between 16 and 100')
         self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
-        if task:
-            if isinstance(task, list):
-                for one in task: # for task in tasks?
-                    self.all_tasks.add_task(one)
-                    self.task_to_do.add_task(one)
-            else:
-                self.all_tasks.add_task(task)
-                self.task_to_do.add_task(task)
+        # if task:
+        #     if isinstance(task, list):
+        #         for one in task: # for task in tasks?
+        #             self.all_tasks.add_task(one)
+        #             self.task_to_do.add_task(one)
+        #     else:
+        #         self.all_tasks.add_task(task)
+        #         self.task_to_do.add_task(task)  do it from manager
 
     def __str__(self):
         task_info_list = []
@@ -76,9 +76,6 @@ class Dev(MainClass):
         for i, j in enumerate(task_info_list, start=1):
             display += str(i) + '.' + str(j) + '\n'
         return display
-
-    def add_to_dev_list(self):
-        DEV_LIST[self.email] = self
 
     def check_password(self, my_password):
         return self.password == my_password
@@ -102,13 +99,14 @@ class Dev(MainClass):
             raise ValueError('New password is not valid')
 
     def add_task(self, task_uid):
-        if isinstance(task_uid, list):
-            for one in task_uid:
-                self.all_tasks.add_task(one)
-                self.task_to_do.add_task(one)
-        else:
-            self.all_tasks.add_task(task_uid)
-            self.task_to_do.add_task(task_uid)
+        pass
+        # if isinstance(task_uid, list):
+        #     for one in task_uid:
+        #         self.all_tasks.add_task(one)
+        #         self.task_to_do.add_task(one)
+        # else:
+        #     self.all_tasks.add_task(task_uid)
+        #     self.task_to_do.add_task(task_uid)
 
     def remove_tasks(self, task, is_deleted_at_all=False):
         if isinstance(task, list):
@@ -132,33 +130,38 @@ class Dev(MainClass):
                 self.task_done.remove_task(task)
         if is_deleted_at_all:
             self.all_tasks.remove_task(task)
-            del TASK_LIST[task.name]
+            # del TASK_LIST[task.name]
 
     def set_in_progress(self, task):
-        task.change_status_on_in_progress()
-        self.remove_tasks(task)
-        self.task_in_progress.add_task(task)
+        pass
+        # task.change_status_on_in_progress()
+        # self.remove_tasks(task)
+        # self.task_in_progress.add_task(task)
 
     def set_resolve(self, task):
-        if task in self.task_in_progress.tasks.values():
-            temp_time = task.created_at if task.updated_at == 'Not changed' else task.updated_at
-            task.change_status_on_to_do()
-            task.trek_time += task.updated_at - temp_time
-        self.remove_tasks(task)
-        self.task_resolve.add_task(task)
+        pass
+        # if task in self.task_in_progress.tasks.values():
+        #     temp_time = task.created_at if task.updated_at == 'Not changed' else task.updated_at
+        #     task.change_status_on_to_do()
+        #     task.trek_time += task.updated_at - temp_time
+        # self.remove_tasks(task)
+        # self.task_resolve.add_task(task)
 
     def set_done(self, task):
-        self.remove_tasks(task)
-        self.task_done.add_task(task)
-        task.change_status_on_done()
+        pass
+        # self.remove_tasks(task)
+        # self.task_done.add_task(task)
+        # task.change_status_on_done()
 
     def set_to_do(self, task):
-        if task in self.task_in_progress.tasks.values():
-            temp_time = task.created_at if task.updated_at == 'Not changed' else task.updated_at
-            task.change_status_on_to_do()
-            task.trek_time += task.updated_at - temp_time
-        self.remove_tasks(task)
-        self.task_to_do.add_task(task)
+        pass
+        # if task in self.task_in_progress.tasks.values():
+        #     temp_time = task.created_at if task.updated_at == 'Not changed' else task.updated_at
+        #     task.change_status_on_to_do()
+        #     task.trek_time += task.updated_at - temp_time
+        # self.remove_tasks(task)
+        # self.task_to_do.add_task(task)
 
     def add_project(self, project_uid):
-        self.projects[project_uid] = PROJ_LIST[project_uid]
+        pass
+        # self.projects[project_uid] = PROJ_LIST[project_uid]

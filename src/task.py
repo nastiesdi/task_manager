@@ -1,8 +1,8 @@
 import datetime
 import hashlib
 
-from logger import TASK_LOG
-from helpers.consts import STATUS_LIST, PRIORITY, TASK_LIST
+from logger import _get_logger
+from helpers.consts import STATUS_LIST, PRIORITY
 from src.main_class import MainClass
 
 
@@ -18,15 +18,9 @@ class Task(MainClass):
         self.track_time = datetime.timedelta()
         self.status = STATUS_LIST[status]
         self.sub_tasks = {}
-        if isinstance(sub_tasks_uid, list):
-            for each in sub_tasks_uid:
-                self.sub_tasks[each]=TASK_LIST[each]
-        else:
-            self.sub_tasks[sub_tasks_uid] = TASK_LIST[sub_tasks_uid]
         self.name_sub_tasks = []
         self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
-        TASK_LIST[self.uid] = self
-        TASK_LOG.info(f'create task: name - {name}')
+        # TASK_LOG.info(f'create task: name - {name}')
 
     def __str__(self):
         task_info_list = []
@@ -40,9 +34,6 @@ class Task(MainClass):
         for num, info in enumerate(task_info_list, start=1):
             display += str(num) + '.' + str(info) + '\n'
         return display
-
-    def add_to_tasklist(self):
-        TASK_LIST[self.uid] = self
 
     def add_sub_tasks(self, new_sub_task):
         if isinstance(new_sub_task, list):

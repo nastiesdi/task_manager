@@ -1,11 +1,12 @@
 import argparse
 import pickle
+import os
 
 from src.dev import Dev
 from src.task import Task
 from src.project import Project
 from manager import Manager
-from helpers.consts import STATUS_LIST, PROJ_LIST, PRIORITY, DEV_LIST, TASK_LIST
+from helpers.consts import STATUS_LIST, PRIORITY, FOLDER_NAME, FILE_NAME, LOG_FILE_NAME
 
 
 def parse_args():
@@ -42,9 +43,9 @@ def parse_args():
     create_task = subparsers.add_parser('create_task')
     create_task.add_argument('-n', '--name', help='Please, enter task\'s name')
     create_task.add_argument('-p', '--priority', choices=PRIORITY, help='Please, enter available priority')
-    create_task.add_argument('-r', '--project', default=None, choices=manager.projects.keys(),
+    create_task.add_argument('-r', '--project', default=None,
                              help='Please, choose one of available project')
-    create_task.add_argument('-e', '--executor', default=None, choices=manager.developers.keys())
+    create_task.add_argument('-e', '--executor', default=None)
     create_task.add_argument('-s', '--status', default='To do', choices=STATUS_LIST)
     create_task.add_argument('-t', '--sub_tasks', default=None, nargs='*', choices=manager.tasks,
                              help='If you wont you can add sub tasks to task ')
@@ -52,19 +53,19 @@ def parse_args():
 
     create_project = subparsers.add_parser('create_project')
     create_project.add_argument('-n', '--name')
-    create_project.add_argument('-d', '--dev', nargs='*', choices=manager.developers.keys(),
+    create_project.add_argument('-d', '--dev', nargs='*',
                                 help='You can add developers to the project, just use their email.'
                                      ' You have to choose it from existing developers')
     create_project.set_defaults(func=manager.create_project)
 
     add_task = subparsers.add_parser('add_task')
-    add_task.add_argument('-e', '--email', default=None, choices=manager.developers.keys())
+    add_task.add_argument('-e', '--email', default=None)
     add_task.add_argument('-t', '--task_uid')
     add_task.set_defaults(func=manager.add_task_to_dev)
 
     add_dev_to_proj = subparsers.add_parser('add_dev_to_proj')
-    add_dev_to_proj.add_argument('-e', '--email', choices=manager.developers.keys())
-    add_dev_to_proj.add_argument('-p', '--project_uid', choices=manager.projects.keys())
+    add_dev_to_proj.add_argument('-e', '--email')
+    add_dev_to_proj.add_argument('-p', '--project_uid')
     add_dev_to_proj.set_defaults(func=manager.add_dev_to_project)
 
     args = parser.parse_args()
@@ -78,29 +79,28 @@ def main():
     # manager.clean_project()
 
     """Сохранение изменений"""
-    manager.dump_devs()
-    manager.dump_current_dev()
-    manager.dump_projects()
-    manager.dump_tasks()
+    manager.save_devs()
+    manager.save_current_dev()
+    manager.save_projects()
+    manager.save_tasks()
 
     """ Отображение всех девов, проектов и тасков"""""
     print('@@@@@@@@ developers @@@@@@@@@')
     for one in manager.developers.values():
-        print(one.email + '   ' + str(one.projects) + '    ' + str(one.all_tasks))
+        print(one)
+        # print(one.email + '   ' + str(one.projects) + '    ' + str(one.all_tasks))
     print('\n@@@@@@@@@@@ projects @@@@@@@@@@@@')
     for one in manager.projects.values():
         print(str(one.name) + '   ' + str(one.dev) + '  ' + str(one.task) + '   ' + one.uid)
     print('\n@@@@@@@@@@@ tasks @@@@@@@@@@@@')
     for one in manager.tasks.values():
-        print(str(one.name) + '  ' + str(one.project) + '  ' + str(one.executor.email) + '  ' + str(one.uid) +
+        print(str(one.name) + '  ' + str(one.project) + '  ' + (str(one.executor.email) if one.executor else '@@@') + '  ' + str(one.uid) +
               'sub tasks: ' + str(one.sub_tasks))
 
 
 if __name__ == '__main__':
-    manager = Manager()
-    manager.load_devs()
-    manager.load_current_dev()
-    manager.load_project()
-    manager.load_tasks()
-    manager.add_const()
+    manager = Manager(database_folder=FOLDER_NAME['data'], users_file=FILE_NAME['devs'],
+                      cur_user_file=FILE_NAME['login'], project_file=FILE_NAME['projects'],
+                      tasks_file=FILE_NAME['tasks'])
+    # manager.clean_project()
     main()
