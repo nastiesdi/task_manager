@@ -175,5 +175,3 @@ class Manager:
         self.developers = {}
         self.projects = {}
         self.current_dev = {}
-# Тебе здесь еще пара методов нужны будут
-# Прикинь какие
