@@ -15,7 +15,16 @@ class Project(MainClass):
         self.dev = dev
 
     def __str__(self):
-        return f'Name project: {self.name}'
+        task_info_list = []
+        key_output_list = ['uid', 'name']
+        for key in key_output_list:
+            if key in self.__dict__.keys() and self.__dict__[key]:
+                task_info_list.append(str(key) + ': ' + str(self.__dict__[key]))
+        display = 'Project:\n'
+        for num, info in enumerate(task_info_list, start=1):
+            display += str(num) + '.' + str(info) + '\n'
+        return display
+
 
     def add_task(self, task):
         if isinstance(task, list):

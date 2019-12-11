@@ -4,6 +4,7 @@ from logger import _get_logger
 from src.task_list import TaskList
 from src.main_class import MainClass
 from helpers.checker import is_valid_email, is_valid_name, is_valid_password, is_valid_age
+from helpers.consts import STATUS_LIST
 
 
 
@@ -62,8 +63,8 @@ class Dev(MainClass):
     def __str__(self):
         task_info_list = []
         key_output_list = ['email', 'first_name', 'last_name', 'task', 'age']
-        for key in self.__dict__.keys():
-            if key in key_output_list and self.__dict__[key]:
+        for key in key_output_list:
+            if key in self.__dict__.keys() and self.__dict__[key]:
                 task_info_list.append(str(key) + ': ' + str(self.__dict__[key]))
         display = 'Dev:\n'
         for i, j in enumerate(task_info_list, start=1):
@@ -126,35 +127,35 @@ class Dev(MainClass):
             # del TASK_LIST[task.name]
 
     def set_in_progress(self, task):
-        pass
-        # task.change_status_on_in_progress()
-        # self.remove_tasks(task)
-        # self.task_in_progress.add_task(task)
+        task.change_status_on_in_progress()
+        self.remove_tasks(task)
+        self.task_in_progress.add_task(task)
 
     def set_resolve(self, task):
-        pass
-        # if task in self.task_in_progress.tasks.values():
-        #     temp_time = task.created_at if task.updated_at == 'Not changed' else task.updated_at
-        #     task.change_status_on_to_do()
-        #     task.trek_time += task.updated_at - temp_time
-        # self.remove_tasks(task)
-        # self.task_resolve.add_task(task)
+        print(task.status)
+        if task.status == 'in progress':
+            print('@@@@@@@@@@@@@@@@@@@')
+            temp_time = task.created_at if task.updated_at == 'Not changed' else task.updated_at
+            print(task.created_at)
+            print(task.updated_at)
+            print(temp_time)
+            task.trek_time += task.updated_at - temp_time
+            print(task.trek_time)
+        self.remove_tasks(task)
+        task.change_status_on_resolve()
+        self.task_resolve.add_task(task)
+
+        ##reshim
 
     def set_done(self, task):
-        pass
-        # self.remove_tasks(task)
-        # self.task_done.add_task(task)
-        # task.change_status_on_done()
+        self.remove_tasks(task)
+        self.task_done.add_task(task)
+        task.change_status_on_done()
 
     def set_to_do(self, task):
-        pass
-        # if task in self.task_in_progress.tasks.values():
-        #     temp_time = task.created_at if task.updated_at == 'Not changed' else task.updated_at
-        #     task.change_status_on_to_do()
-        #     task.trek_time += task.updated_at - temp_time
-        # self.remove_tasks(task)
-        # self.task_to_do.add_task(task)
-
-    def add_project(self, project_uid):
-        pass
-        # self.projects[project_uid] = PROJ_LIST[project_uid]
+        if task.status == 'in progress':
+            temp_time = task.created_at if task.updated_at == 'Not changed' else task.updated_at
+            task.trek_time += task.updated_at - temp_time
+        task.change_status_on_to_do()
+        self.remove_tasks(task)
+        self.task_to_do.add_task(task)

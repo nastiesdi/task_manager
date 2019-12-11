@@ -6,7 +6,7 @@ from logger import _get_logger
 from src.dev import Dev
 from src.task import Task
 from src.project import Project
-from helpers.consts import FOLDER_NAME, FILE_NAME, LOG_FILE_NAME
+from helpers.consts import FOLDER_NAME, FILE_NAME, LOG_FILE_NAME,STATUS_LIST
 
 
 class Manager:
@@ -63,6 +63,28 @@ class Manager:
                                          repeat_new_password=args.repeat_new_password)
         self.logger.info(f'User {self.current_dev} with name {self.current_dev} change password on {args.new_password}')
 
+    def show_all_devs(self, args):
+        for each in self.developers.values():
+            print(each)
+
+    def show_devs_tasks(self, args):
+        for each in self.tasks.values():
+            if each.executor == args.executor:
+                print(each)
+
+    def show_devs_tasks_with_status(self, args):
+        for each in self.tasks.values():
+            if each.executor == args.executor and each.status == args.status:
+                print(each)
+
+    def show_tasks_with_priority(self, args):
+        for each in self.tasks.values():
+            if each.executor == args.executor and each.status == args.priority:
+                print(each)
+
+    def sort_dev_tasks_priority(self, args):
+        self.developers[args.email].tasks.tasks.sort_priority_task()
+
     def create_task(self, args):
         task = Task(name=args.name,
                     priority=args.priority,
@@ -100,7 +122,36 @@ class Manager:
             self.logger.info(f'Priority for task {args.uid} is changed to {args.priority}')
         if args.status:
             self.tasks[args.uid].status = args.status
-            self.logger.info(f'Status for task {args.uid} is changed to {args.priority}')
+            self.logger.info(f'Status for task {args.uid} is changed to {args.status}')
+
+    def set_status_in_progress(self, args):
+        old_status = self.tasks[args.uid].status
+        old_tracked_time = self.tasks[args.uid].trek_time
+        self.developers[args.email].set_in_progress(self.tasks[args.uid])
+        self.logger.info(f'Status for task {args.uid} is changed from {old_status} to {self.tasks[args.uid].status}'
+                         f'old trecked time - {old_tracked_time}, new - {self.tasks[args.uid].trek_time}')
+
+
+    def set_status_resolve(self, args):
+        old_status = self.tasks[args.uid].status
+        old_tracked_time = self.tasks[args.uid].trek_time
+        self.developers[args.email].set_resolve(self.tasks[args.uid])
+        self.logger.info(f'Status for task {args.uid} is changed from {old_status} to {self.tasks[args.uid].status}'
+                         f' old trecked time - {old_tracked_time}, new - {self.tasks[args.uid].trek_time}')
+
+    def set_status_done(self, args):
+        old_status = self.tasks[args.uid].status
+        old_tracked_time = self.tasks[args.uid].trek_time
+        self.developers[args.email].set_done(self.tasks[args.uid])
+        self.logger.info(f'Status for task {args.uid} is changed from {old_status} to {self.tasks[args.uid].status}'
+                         f' old trecked time - {old_tracked_time}, new - {self.tasks[args.uid].trek_time}')
+
+    def set_status_to_do(self, args):
+        old_status = self.tasks[args.uid].status
+        old_tracked_time = self.tasks[args.uid].trek_time
+        self.developers[args.email].set_to_do(self.tasks[args.uid])
+        self.logger.info(f'Status for task {args.uid} is changed from {old_status} to {self.tasks[args.uid].status}'
+                         f' old trecked time - {old_tracked_time}, new - {self.tasks[args.uid].trek_time}')
 
     def create_project(self, args):
         project = Project(name=args.name, dev=args.dev, tasks=args.tasks)
@@ -108,49 +159,33 @@ class Manager:
         self.logger.info(f'Project {project.uid} with name {project.name} was created ')
 
     def show_all_task(self, args):
-        print(self.tasks.values())
         for each in self.tasks.values():
             print(each)
 
+    def show_all_project(self, args):
+        for each in self.projects.values():
+            print(each)
 
     def change_project(self, args):
         pass
 
     def add_task_to_dev(self, args):
-        pass
-        # if self.current_dev:  # Перепиши чуть по лучше, условие
-        #     if args.email:
-        #         self.developers[args.email].add_task(args.task_uid)
-        #         self.tasks[args.task_uid].change_task(task_executor=self.developers[args.email])
-        #
-        #     else:
-        #         self.current_dev.add_task(args.task_uid)
-        #         self.tasks[args.task_uid].change_task(task_executor=self.current_dev)
-        # else:
-        #     raise Exception('Please login')
+        self.developers[args.email].add_task(self.tasks[args.task_uid])
+        self.tasks[args.task_uid].executor = args.email
+        self.logger.info(f'Task {args.uid} is added to {args.email}')
 
     def add_dev_to_project(self, args):
-        pass
-        # # print(self.developers.keys())
-        # self.projects[args.project_uid] = args
-        # self.developers[args.email] = args
+        self.projects[args.project_uid].dev = args.email
+        self.developers[args.email] = args.project_uid
+        self.logger.info(f'Task {args.uid} is added to project: {args.project_uid}')
 
     def remove_task_from_dev(self, dev, task):
-        pass
-
-    # def change_task(self, name, new_priority, new_project, new_executor, new_status):
-    #     pass
-
-    def show_all_dev_task(self, dev):
         pass
 
     def show_subtask_for_task(self, task):
         pass
 
     def remove_subtask_task(self, task):
-        pass
-
-    def sort_dev_task_priority(self, dev):
         pass
 
     def load_devs(self):
@@ -196,9 +231,3 @@ class Manager:
     def save_projects(self):
         with open(os.path.join(self.database_folder, self.project_file), 'tw') as outfile:
             outfile.write(jsonpickle.encode(self.projects))
-
-    def clean_project(self):
-        self.tasks = {}
-        self.developers = {}
-        self.projects = {}
-        self.current_dev = {}

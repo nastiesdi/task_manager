@@ -12,10 +12,9 @@ class Task(MainClass):
         self.name = name
         self.executor = executor
         self.project = project
-        self.trek_time = datetime.timedelta() # track_time refactor
+        self.trek_time = datetime.timedelta()
         self.status = status
         self.priority = PRIORITY[priority]
-        self.track_time = datetime.timedelta()
         self.status = STATUS_LIST[status]
         self.sub_tasks = {}
         self.name_sub_tasks = TaskList({})
@@ -23,11 +22,9 @@ class Task(MainClass):
 
     def __str__(self):
         task_info_list = []
-        key_output_list = ['name', 'status', 'executor', 'priority']
-        for key in self.__dict__.keys():
-            if key == 'executor' and self.__dict__[key]:
-                task_info_list.append(str(key) + ': ' + str(self.__dict__[key]))
-            elif key in key_output_list and self.__dict__[key]:
+        key_output_list = ['uid', 'name', 'status', 'priority', 'executor']
+        for key in key_output_list:
+            if key in self.__dict__.keys() and self.__dict__[key]:
                 task_info_list.append(str(key) + ': ' + str(self.__dict__[key]))
         display = 'Tasks info:\n'
         for num, info in enumerate(task_info_list, start=1):
@@ -124,26 +121,20 @@ class Task(MainClass):
         self.project = project
         self.update_time()
 
-    def change_task(self, task_executor=None, new_priority=None):
-        if task_executor:
-            self.executor = task_executor
-        if new_priority:
-            self.priority = PRIORITY[new_priority]
-
     def change_status_on_to_do(self):
-        self.status = STATUS_LIST['To do']
+        self.status = STATUS_LIST['to_do']
         self.update_time()
 
     def change_status_on_in_progress(self):
-        self.status = STATUS_LIST['In progress']
+        self.status = STATUS_LIST['in_progress']
         self.update_time()
 
     def change_status_on_resolve(self):
-        self.status = STATUS_LIST['Resolve']
+        self.status = STATUS_LIST['resolve']
         self.update_time()
 
     def change_status_on_done(self):
-        self.status = STATUS_LIST['Done']
+        self.status = STATUS_LIST['done']
         self.update_time()
 
 # TODO:

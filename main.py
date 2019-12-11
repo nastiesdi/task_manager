@@ -1,58 +1,116 @@
 import argparse
-import pickle
-import os
 
-from src.dev import Dev
-from src.task import Task
-from src.project import Project
 from manager import Manager
-from helpers.consts import STATUS_LIST, PRIORITY, FOLDER_NAME, FILE_NAME, LOG_FILE_NAME
+from helpers.consts import STATUS_LIST, PRIORITY, FOLDER_NAME, FILE_NAME
 
 
 def parse_args():
-    '''
-        Добавить везде нормальный хелр, чтобы было похоже на прод вариант
-    :return:
-    '''
-    parser = argparse.ArgumentParser()
-    subparsers = parser.add_subparsers()
-    reg_parser = subparsers.add_parser('reg_user', help='jjj')
-    reg_parser.add_argument('-e', '--email', type=str, help='The email must match the mask aa@ja.ar')
-    reg_parser.add_argument('-p', '--password', type=str, help='Password must contain from 5 to 25 characters, at least'
-                                                               ' 1 character of upper case, lower case and number ')
-    reg_parser.add_argument('-r', '--repeat_password', type=str, help='Password and repeat password must match')
-    reg_parser.add_argument('-f', '--first_name', type=str, help='First name must be between 2 and 15 latin characters')
-    reg_parser.add_argument('-l', '--last_name', type=str, help='Last name must be between 2 and 15 latin characters')
-    reg_parser.add_argument('-a', '--age', type=int, help='Age must be between 16 and 100')
-    reg_parser.set_defaults(func=manager.registration)
+    parser = argparse.ArgumentParser(description='Great argument parser for Ad_como')
 
-    login_parser = subparsers.add_parser('login')
-    login_parser.add_argument('-e', '--email', choices=manager.developers, help='The entered email must be contained in the database')
+    subparsers = parser.add_subparsers(help='Sub-command help')
+
+    developer_parser = subparsers.add_parser('developer', help='Do smth with developer')
+
+    developer_subparsers = developer_parser.add_subparsers(help='sub-command help')
+
+    register_parser = developer_subparsers.add_parser('register', help='For register new developer')
+    register_parser.add_argument('-e', '--email', type=str, help='The email must match the mask aa@ja.ar',
+                                 required=True)
+    register_parser.add_argument('-p', '--password', type=str,
+                                 help='Password must contain from 5 to 25 characters, min 1 character of upper case,'
+                                      ' lower case and number ')
+    register_parser.add_argument('-r', '--repeat_password', type=str, help='Password and repeat password must match')
+    register_parser.add_argument('-f', '--first_name', type=str,
+                                 help='First name must be between 2 and 15 latin characters')
+    register_parser.add_argument('-l', '--last_name', type=str,
+                                 help='Last name must be between 2 and 15 latin characters')
+    register_parser.add_argument('-a', '--age', type=int, help='Age must be between 16 and 100')
+    register_parser.set_defaults(func=manager.registration)
+
+    login_parser = developer_subparsers.add_parser('login', help='Login user')
+    login_parser.add_argument('-e', '--email', choices=manager.developers,
+                              help='The entered email must be contained in the database')
     login_parser.add_argument('-p', '--password', help='Password must be valid for the entered email')
     login_parser.set_defaults(func=manager.login)
-    # email, old_password, new_password, repeat_new_password)
 
-    change_password = subparsers.add_parser('change_password')
-    # change_password_pars.add_argument('-e', '--email')
+    change_password = developer_subparsers.add_parser('change_password', help='Change user password')
     change_password.add_argument('-o', '--old_password', help='Old password must match current dev\'s password')
     change_password.add_argument('-n', '--new_password', help='Password must contain from 5 to 25 characters, at'
                                                               ' least 1 character of upper case, lower case and number')
     change_password.add_argument('-r', '--repeat_new_password', help='Password and repeat password must match')
     change_password.set_defaults(func=manager.change_password)
 
-    create_task = subparsers.add_parser('create_task')
-    create_task.add_argument('-n', '--name', help='Please, enter task\'s name')
+    show_devs = developer_subparsers.add_parser('show', help='Show all developers')
+    show_devs.set_defaults(func=manager.show_all_devs)
+
+    task_parser = developer_subparsers.add_parser('tasks', help='Do smth with developer')
+
+    tasks_subparsers = task_parser.add_subparsers(help='sub-command help')
+
+    set_status_parser = tasks_subparsers.add_parser('set', help='set status')
+
+    set_status_subparsers = set_status_parser.add_subparsers(help='sub-command help')
+
+    change_status_on_in_progress = set_status_subparsers.add_parser('progress', help='Set status "in progress"')
+    change_status_on_in_progress.add_argument('-e', '--email', choices=manager.developers, required=True,
+                                              help='Choose one of developers')
+    change_status_on_in_progress.add_argument('-u', '--uid', choices=manager.tasks, help='Please, choose one of tasks',
+                                              required=True)
+    change_status_on_in_progress.set_defaults(func=manager.set_status_in_progress)
+
+    change_status_on_resolve = set_status_subparsers.add_parser('resolve', help='Set status "on resolve"')
+    change_status_on_resolve.add_argument('-e', '--email', choices=manager.developers, required=True,
+                                          help='Choose one of developers')
+    change_status_on_resolve.add_argument('-u', '--uid', choices=manager.tasks, help='Please, choose one of tasks',
+                                          required=True)
+    change_status_on_resolve.set_defaults(func=manager.set_status_resolve)
+
+    change_status_done = set_status_subparsers.add_parser('done', help='Set status "done"')
+    change_status_done.add_argument('-e', '--email', choices=manager.developers, required=True,
+                                    help='Choose one of developers')
+    change_status_done.add_argument('-u', '--uid', choices=manager.tasks, help='Choose one tasks', required=True)
+    change_status_done.set_defaults(func=manager.set_status_done)
+
+    change_status_to_do = set_status_subparsers.add_parser('do', help='Set status "to_do"')
+    change_status_to_do.add_argument('-e', '--email', choices=manager.developers, required=True,
+                                     help='Choose one of developers')
+    change_status_to_do.add_argument('-u', '--uid', choices=manager.tasks, help='Choose task', required=True)
+    change_status_to_do.set_defaults(func=manager.set_status_to_do)
+
+    show_task_parser = tasks_subparsers.add_parser('show', help='Do smth with developer')
+
+    show_tasks_subparsers = show_task_parser.add_subparsers(help='sub-command help')
+
+    show_devs_tasks = show_tasks_subparsers.add_parser('all', help='Show all dews task')
+    show_devs_tasks.add_argument('-e', '--executor', choices=manager.developers, required=True,
+                                 help='Choose one of developers')
+    show_devs_tasks.set_defaults(func=manager.show_devs_tasks)
+
+    show_tasks_with_status = show_tasks_subparsers.add_parser('status', help='Show tasks with chosen status ')
+    show_tasks_with_status.add_argument('-e', '--executor', required=True, choices=manager.developers,
+                                        help='Choose one of developers')
+    show_tasks_with_status.add_argument('-s', '--status', required=True, choices=STATUS_LIST)
+    show_tasks_with_status.set_defaults(func=manager.show_devs_tasks_with_status)
+
+    show_tasks_with_priority = show_tasks_subparsers.add_parser('priority', help='Show tasks with chosen status ')
+    show_tasks_with_priority.add_argument('-e', '--executor', required=True, choices=manager.developers,
+                                          help='Choose one of developers')
+    show_tasks_with_priority.add_argument('-p', '--priority', choices=PRIORITY, help='Please, enter available priority')
+    show_tasks_with_priority.set_defaults(func=manager.show_tasks_with_priority)
+
+    create_task = tasks_subparsers.add_parser('create', help='Create task ')
+    create_task.add_argument('-n', '--name', help='Please, enter task\'s name', required=True)
     create_task.add_argument('-p', '--priority', choices=PRIORITY, help='Please, enter available priority')
     create_task.add_argument('-r', '--project', default=None, choices=manager.projects,
                              help='Please, choose one of available project')
-    create_task.add_argument('-e', '--executor', default=None, choices=manager.developers)
+    create_task.add_argument('-e', '--executor', required=True, choices=manager.developers)
     create_task.add_argument('-s', '--status', default='To do', choices=STATUS_LIST)
     create_task.add_argument('-t', '--sub_tasks', default=None, nargs='*', choices=manager.tasks,
                              help='If you wont you can add sub tasks to task ')
     create_task.set_defaults(func=manager.create_task)
 
-    change_task = subparsers.add_parser('change_task')
-    change_task.add_argument('-u', '--uid', choices=manager.tasks, help='Please, choose one of tasks')
+    change_task = tasks_subparsers.add_parser('change', help='Change task ')
+    change_task.add_argument('-u', '--uid', choices=manager.tasks, help='Please, choose one of tasks', required=True)
     change_task.add_argument('-e', '--executor', choices=manager.developers, help='Choose one of developers')
     change_task.add_argument('-r', '--project', choices=manager.projects, help='Choose one of projects')
     change_task.add_argument('-p', '--priority', choices=PRIORITY, help='Please, enter new priority')
@@ -61,26 +119,50 @@ def parse_args():
     change_task.add_argument('-s', '--status', choices=STATUS_LIST)
     change_task.set_defaults(func=manager.change_task)
 
-    create_project = subparsers.add_parser('create_project')
-    create_project.add_argument('-n', '--name')
+    add_task = tasks_subparsers.add_parser('add', help='Add task to developer')
+    add_task.add_argument('-e', '--email', default=None)
+    add_task.add_argument('-t', '--task_uid')
+    add_task.set_defaults(func=manager.add_task_to_dev)
+
+    project_parser = subparsers.add_parser('project', help='Do smth with project')
+
+    project_subparsers = project_parser.add_subparsers(help='sub-command help')
+
+    create_project = project_subparsers.add_parser('create', help='Create project')
+    create_project.add_argument('-n', '--name', required=True, help='Input project name')
     create_project.add_argument('-d', '--dev', nargs='*', choices=manager.developers,
                                 help='You can add developers to the project, just use their email.'
                                      ' You have to choose it from existing developers')
     create_project.add_argument('-t', '--tasks', choices=manager.tasks, nargs='*', help='Please, input project\'s task')
     create_project.set_defaults(func=manager.create_project)
 
-    add_task = subparsers.add_parser('add_task')
-    add_task.add_argument('-e', '--email', default=None)
-    add_task.add_argument('-t', '--task_uid')
+    show_project = project_subparsers.add_parser('show', help='Show all projects')
+    show_project.set_defaults(func=manager.show_all_project)
+
+    project_add_parser = project_subparsers.add_parser('add', help='Do smth with project')
+
+    project_add_subparsers = project_add_parser.add_subparsers(help='sub-command help')
+
+    add_dev_to_proj = project_add_subparsers.add_parser('dev', help='Add developer to project')
+    add_dev_to_proj.add_argument('-e', '--email', help='Choose one of developers')
+    add_dev_to_proj.add_argument('-p', '--project_uid', choices=manager.projects, help='Chose one of project')
+    add_dev_to_proj.set_defaults(func=manager.add_dev_to_project)
+
+    add_task = project_add_subparsers.add_parser('task', help='Add task to project')
+    add_task.add_argument('-e', '--email', required=True, help='Choose one of developers')
+    add_task.add_argument('-t', '--task_uid', choices=manager.tasks, help='Chose one of tasks')
     add_task.set_defaults(func=manager.add_task_to_dev)
 
-    show_all_task = subparsers.add_parser('show_all_task')
+    task_parser = subparsers.add_parser('tasks', help='Do smth with tasks')
+
+    task_subparsers = task_parser.add_subparsers(help='sub-command help')
+
+    show_all_task = task_subparsers.add_parser('show', help='Show all task')
     show_all_task.set_defaults(func=manager.show_all_task)
 
-    add_dev_to_proj = subparsers.add_parser('add_dev_to_proj')
-    add_dev_to_proj.add_argument('-e', '--email')
-    add_dev_to_proj.add_argument('-p', '--project_uid')
-    add_dev_to_proj.set_defaults(func=manager.add_dev_to_project)
+    # sort_dev_task_priority = task_subparsers.add_parser('priority', help='Show sorted task by priority')
+    # add_task.add_argument('-e', '--email', required=True, help='Choose one of developers')
+    # sort_dev_task_priority.set_defaults(func=manager.sort_dev_tasks_priority)
 
     args = parser.parse_args()
     if 'func' in args:
@@ -90,7 +172,6 @@ def parse_args():
 def main():
     """В следубщей строке считываются аргументы из терминала"""
     parse_args()
-    # manager.clean_project()
 
     """Сохранение изменений"""
     manager.save_devs()
@@ -98,23 +179,9 @@ def main():
     manager.save_projects()
     manager.save_tasks()
 
-    """ Отображение всех девов, проектов и тасков"""""
-    # print('@@@@@@@@ developers @@@@@@@@@')
-    # for one in manager.developers.values():
-    #     print(one)
-    #     print(one.email + '   ' + str(one.projects) + '    ' + (str(one.all_tasks) if one.all_tasks else None))
-    # print('\n@@@@@@@@@@@ projects @@@@@@@@@@@@')
-    # for one in manager.projects.values():
-    #     print(str(one.name) + '   ' + str(one.dev) + '  ' + str(one.tasks) + '   ' + one.uid)
-    # print('\n@@@@@@@@@@@ tasks @@@@@@@@@@@@')
-    # for one in manager.tasks.values():
-    #     print(str(one.name) + '  ' + str(one.project) + '  ' + (str(one.executor.email) if one.executor else '@@@') + '  ' + str(one.uid) +
-    #           'sub tasks: ' + str(one.sub_tasks))
-
 
 if __name__ == '__main__':
     manager = Manager(database_folder=FOLDER_NAME['data'], users_file=FILE_NAME['devs'],
                       cur_user_file=FILE_NAME['login'], project_file=FILE_NAME['projects'],
                       tasks_file=FILE_NAME['tasks'])
-    # manager.clean_project()
     main()
