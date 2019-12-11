@@ -4,7 +4,7 @@ import hashlib
 from logger import _get_logger
 from helpers.consts import STATUS_LIST, PRIORITY
 from src.main_class import MainClass
-
+from src.task_list import TaskList
 
 class Task(MainClass):
     def __init__(self, name, priority, project=None, executor=None, status='To do', sub_tasks_uid=None):
@@ -12,23 +12,19 @@ class Task(MainClass):
         self.name = name
         self.executor = executor
         self.project = project
-        self.trek_time = datetime.timedelta() # track_time refactor
+        self.trek_time = datetime.timedelta()
         self.status = status
         self.priority = PRIORITY[priority]
-        self.track_time = datetime.timedelta()
         self.status = STATUS_LIST[status]
         self.sub_tasks = {}
-        self.name_sub_tasks = []
+        self.name_sub_tasks = TaskList({})
         self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
-        # TASK_LOG.info(f'create task: name - {name}')
 
     def __str__(self):
         task_info_list = []
-        key_output_list = ['name', 'status', 'executor', 'priority']
-        for key in self.__dict__.keys():
-            if key == 'executor' and self.__dict__[key]:
-                task_info_list.append(str(key) + ': ' + str(self.__dict__[key].email))
-            elif key in key_output_list and self.__dict__[key]:
+        key_output_list = ['uid', 'name', 'status', 'priority', 'executor']
+        for key in key_output_list:
+            if key in self.__dict__.keys() and self.__dict__[key]:
                 task_info_list.append(str(key) + ': ' + str(self.__dict__[key]))
         display = 'Tasks info:\n'
         for num, info in enumerate(task_info_list, start=1):
@@ -38,9 +34,9 @@ class Task(MainClass):
     def add_sub_tasks(self, new_sub_task):
         if isinstance(new_sub_task, list):
             for task in new_sub_task:
-                self.sub_tasks[task.uid] = task
+                self.sub_tasks[task] = task
         else:
-            self.sub_tasks[new_sub_task.uid] = new_sub_task
+            self.sub_tasks[new_sub_task] = new_sub_task
 
     def show_all_sub_tasks(self):
         self.name_sub_tasks = []
@@ -125,26 +121,20 @@ class Task(MainClass):
         self.project = project
         self.update_time()
 
-    def change_task(self, task_executor=None, new_priority=None):
-        if task_executor:
-            self.executor = task_executor
-        if new_priority:
-            self.priority = PRIORITY[new_priority]
-
     def change_status_on_to_do(self):
-        self.status = STATUS_LIST['To do']
+        self.status = STATUS_LIST['to_do']
         self.update_time()
 
     def change_status_on_in_progress(self):
-        self.status = STATUS_LIST['In progress']
+        self.status = STATUS_LIST['in_progress']
         self.update_time()
 
     def change_status_on_resolve(self):
-        self.status = STATUS_LIST['Resolve']
+        self.status = STATUS_LIST['resolve']
         self.update_time()
 
     def change_status_on_done(self):
-        self.status = STATUS_LIST['Done']
+        self.status = STATUS_LIST['done']
         self.update_time()
 
 # TODO:

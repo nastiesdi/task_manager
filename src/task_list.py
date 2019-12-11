@@ -1,6 +1,5 @@
 
 from src.main_class import MainClass
-# from helpers.consts import TASK_LIST
 
 
 class TaskList(MainClass):
@@ -12,12 +11,13 @@ class TaskList(MainClass):
 
     def __str__(self):
         display = ''
-        for num, name in enumerate([task.name for task in self.tasks.values()], start=1):
-            display += str(num) + ': ' + str(name) + '\n'
-        return display
+        if self.tasks.values():
+            for num, name in enumerate([task.name for task in self.tasks.values()], start=1):
+                display += str(num) + ': ' + str(name) + '\n'
+            return display
 
-    # def add_task(self, uid):
-    #     self.tasks[uid] = TASK_LIST[uid]
+    def add_task(self, task):
+        self.tasks[task.uid] = task
 
     def remove_task(self, task):
         del self.tasks[task.uid]
