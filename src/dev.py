@@ -1,14 +1,10 @@
 import hashlib
 
-from logger import _get_logger
 from src.task_list import TaskList
 from src.main_class import MainClass
 from helpers.checker import is_valid_email, is_valid_name, is_valid_password, is_valid_age
-from helpers.consts import STATUS_LIST
 
 
-
-# Юзменяемые типы не используй в аргументах
 class Dev(MainClass):
     def __init__(self, email, password, repeat_password, first_name, last_name, age):
         """
@@ -17,7 +13,7 @@ class Dev(MainClass):
         :param repeat_password:
         :param first_name:
         :param last_name:
-        :param age:
+        :param age: int
         :param task:
         """
         super().__init__()
@@ -51,14 +47,6 @@ class Dev(MainClass):
         else:
             raise ValueError('Age must be between 16 and 100')
         self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
-        # if tasks:
-        #     if isinstance(tasks, list):
-        #         for one in tasks: # for task in tasks?
-        #             self.all_tasks.add_task(one)
-        #             self.task_to_do.add_task(one)
-        #     else:
-        #        self.all_tasks.add_task(tasks)
-        #     self.task_to_do.add_task(tasks)
 
     def __str__(self):
         task_info_list = []
@@ -134,18 +122,13 @@ class Dev(MainClass):
     def set_resolve(self, task):
         print(task.status)
         if task.status == 'in progress':
-            print('@@@@@@@@@@@@@@@@@@@')
             temp_time = task.created_at if task.updated_at == 'Not changed' else task.updated_at
-            print(task.created_at)
-            print(task.updated_at)
-            print(temp_time)
+            task.change_status_on_resolve()
             task.trek_time += task.updated_at - temp_time
-            print(task.trek_time)
+        else:
+            task.change_status_on_resolve()
         self.remove_tasks(task)
-        task.change_status_on_resolve()
         self.task_resolve.add_task(task)
-
-        ##reshim
 
     def set_done(self, task):
         self.remove_tasks(task)
@@ -155,7 +138,9 @@ class Dev(MainClass):
     def set_to_do(self, task):
         if task.status == 'in progress':
             temp_time = task.created_at if task.updated_at == 'Not changed' else task.updated_at
+            task.change_status_on_to_do()
             task.trek_time += task.updated_at - temp_time
-        task.change_status_on_to_do()
+        else:
+            task.change_status_on_to_do()
         self.remove_tasks(task)
         self.task_to_do.add_task(task)

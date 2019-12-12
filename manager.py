@@ -83,7 +83,7 @@ class Manager:
                 print(each)
 
     def sort_dev_tasks_priority(self, args):
-        self.developers[args.email].tasks.tasks.sort_priority_task()
+        print(self.developers[args.email].all_tasks.sort_priority_task())
 
     def create_task(self, args):
         task = Task(name=args.name,
@@ -124,13 +124,18 @@ class Manager:
             self.tasks[args.uid].status = args.status
             self.logger.info(f'Status for task {args.uid} is changed to {args.status}')
 
+    def add_sub_task(self, args):
+        old_subtasks = self.tasks[args.task_uid].sub_tasks
+        self.tasks[args.task_uid].add_sub_tasks(self.tasks[args.sub_task_uid])
+        self.logger.info(f'To task {args.task_uid} was add sub_task. Old_subtask -  {old_subtasks}'
+                         f'New sub_tasks {self.tasks[args.task_uid].sub_tasks}')
+
     def set_status_in_progress(self, args):
         old_status = self.tasks[args.uid].status
         old_tracked_time = self.tasks[args.uid].trek_time
         self.developers[args.email].set_in_progress(self.tasks[args.uid])
         self.logger.info(f'Status for task {args.uid} is changed from {old_status} to {self.tasks[args.uid].status}'
                          f'old trecked time - {old_tracked_time}, new - {self.tasks[args.uid].trek_time}')
-
 
     def set_status_resolve(self, args):
         old_status = self.tasks[args.uid].status
@@ -182,8 +187,9 @@ class Manager:
     def remove_task_from_dev(self, dev, task):
         pass
 
-    def show_subtask_for_task(self, task):
-        pass
+    def show_subtask_for_task(self, args):
+        self.logger.info(f'Show info about task {args.task_uid}: {self.tasks[args.task_uid]}')
+        print(self.tasks[args.task_uid].show_sub_tasks())
 
     def remove_subtask_task(self, task):
         pass
@@ -231,3 +237,5 @@ class Manager:
     def save_projects(self):
         with open(os.path.join(self.database_folder, self.project_file), 'tw') as outfile:
             outfile.write(jsonpickle.encode(self.projects))
+
+# python main.py reg_user -e developer@hn -p 123456Qq -r 123456Qq -f sdsdc -l dasdasd -a 22

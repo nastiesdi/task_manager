@@ -47,6 +47,10 @@ def parse_args():
 
     tasks_subparsers = task_parser.add_subparsers(help='sub-command help')
 
+    sort_dev_task_priority = tasks_subparsers.add_parser('priority', help='Show sorted task by priority')
+    sort_dev_task_priority.add_argument('-e', '--email', required=True, help='Choose one of developers')
+    sort_dev_task_priority.set_defaults(func=manager.sort_dev_tasks_priority)
+
     set_status_parser = tasks_subparsers.add_parser('set', help='set status')
 
     set_status_subparsers = set_status_parser.add_subparsers(help='sub-command help')
@@ -100,11 +104,11 @@ def parse_args():
 
     create_task = tasks_subparsers.add_parser('create', help='Create task ')
     create_task.add_argument('-n', '--name', help='Please, enter task\'s name', required=True)
-    create_task.add_argument('-p', '--priority', choices=PRIORITY, help='Please, enter available priority')
+    create_task.add_argument('-p', '--priority', choices=PRIORITY, required=True, help='Enter available priority')
     create_task.add_argument('-r', '--project', default=None, choices=manager.projects,
                              help='Please, choose one of available project')
     create_task.add_argument('-e', '--executor', required=True, choices=manager.developers)
-    create_task.add_argument('-s', '--status', default='To do', choices=STATUS_LIST)
+    create_task.add_argument('-s', '--status', default='to_do', choices=STATUS_LIST)
     create_task.add_argument('-t', '--sub_tasks', default=None, nargs='*', choices=manager.tasks,
                              help='If you wont you can add sub tasks to task ')
     create_task.set_defaults(func=manager.create_task)
@@ -157,12 +161,38 @@ def parse_args():
 
     task_subparsers = task_parser.add_subparsers(help='sub-command help')
 
-    show_all_task = task_subparsers.add_parser('show', help='Show all task')
+    create_task_without_dev = task_subparsers.add_parser('create', help='Create task')
+    create_task_without_dev.add_argument('-n', '--name', help='Please, enter task\'s name', required=True)
+    create_task_without_dev.add_argument('-p', '--priority', choices=PRIORITY, required=True, help='Enter available priority')
+    create_task_without_dev.add_argument('-r', '--project', default=None, choices=manager.projects,
+                             help='Please, choose one of available project')
+    create_task_without_dev.add_argument('-e', '--executor', choices=manager.developers, help='Chose developer')
+    create_task_without_dev.add_argument('-s', '--status', default='to_do', choices=STATUS_LIST, help='Chose status')
+    create_task_without_dev.add_argument('-t', '--sub_tasks', default=None, nargs='*', choices=manager.tasks,
+                             help='If you wont you can add sub tasks to task ')
+    create_task_without_dev.set_defaults(func=manager.create_task)
+
+    show_all_task = task_subparsers.add_parser('all', help='Show all task')
     show_all_task.set_defaults(func=manager.show_all_task)
 
-    # sort_dev_task_priority = task_subparsers.add_parser('priority', help='Show sorted task by priority')
-    # add_task.add_argument('-e', '--email', required=True, help='Choose one of developers')
-    # sort_dev_task_priority.set_defaults(func=manager.sort_dev_tasks_priority)
+    show_sub_task = task_subparsers.add_parser('sub_task', help='Show full info tasks')
+    show_sub_task.add_argument('-t', '--task_uid', choices=manager.tasks, help='Chose one of tasks')
+    show_sub_task.set_defaults(func=manager.show_subtask_for_task)
+
+    add_subtask = task_subparsers.add_parser('add_subtask', help='Add sub task to task')
+    add_subtask.add_argument('-t', '--task_uid', choices=manager.tasks, help='Chose one of tasks')
+    add_subtask.add_argument('-s', '--sub_task_uid', choices=manager.tasks, help='Chose one of tasks')
+    add_subtask.set_defaults(func=manager.add_sub_task)
+
+    change_tasks = task_subparsers.add_parser('change', help='Change task ')
+    change_tasks.add_argument('-u', '--uid', choices=manager.tasks, help='Please, choose one of tasks', required=True)
+    change_tasks.add_argument('-e', '--executor', choices=manager.developers, help='Choose one of developers')
+    change_tasks.add_argument('-r', '--project', choices=manager.projects, help='Choose one of projects')
+    change_tasks.add_argument('-p', '--priority', choices=PRIORITY, help='Please, enter new priority')
+    change_tasks.add_argument('-t', '--sub_tasks', default=None, nargs='*', choices=manager.tasks,
+                              help='If you wont you can add sub tasks to task ')
+    change_tasks.add_argument('-s', '--status', choices=STATUS_LIST)
+    change_tasks.set_defaults(func=manager.change_task)
 
     args = parser.parse_args()
     if 'func' in args:
