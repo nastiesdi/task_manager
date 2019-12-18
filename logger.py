@@ -4,8 +4,6 @@ import logging
 def _get_logger(log_file_name):
     logger = logging.getLogger()
     logger.setLevel(logging.INFO)
-    # logger.setLevel(logging.DEBUG)
-    # logger.setLevel(logging.ERROR)
     file_handler = logging.FileHandler(log_file_name)
     formatter = logging.Formatter('%(funcName)s %(levelname)s %(asctime)s - %(message)s')
     file_handler.setFormatter(formatter)

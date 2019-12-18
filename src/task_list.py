@@ -19,8 +19,8 @@ class TaskList(MainClass):
     def add_task(self, task):
         self.tasks[task.uid] = task
 
-    def remove_task(self, task):
-        del self.tasks[task.uid]
+    def remove_task(self, task_uid):
+        del self.tasks[task_uid]
 
     def get_all_task(self):
         str_all_task = ''

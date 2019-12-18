@@ -10,7 +10,9 @@ class Project(MainClass):
         super().__init__()
         self.name = name
         self.tasks = TaskList({})
-        self.tasks.add_task(tasks)
+        print(tasks)
+        if tasks:
+            self.tasks.add_task(tasks)
         self.uid = hashlib.sha224(bytes(str(self), 'utf-8')).hexdigest()[:10]
         self.dev = dev
 
@@ -25,7 +27,6 @@ class Project(MainClass):
             display += str(num) + '.' + str(info) + '\n'
         return display
 
-
     def add_task(self, task):
         if isinstance(task, list):
             for one in task:
@@ -33,11 +34,15 @@ class Project(MainClass):
         else:
             self.tasks.add_task(task)
 
+    def rename(self, new_name):
+        self.name = new_name
+        return self.name
+
     def print_all_task(self):
-        display = 'All task:\n'
+        display = f'All task for project {self.name}:\n'
         for num, name in enumerate([r.name for r in self.tasks.tasks.values()], start=1):
             display += str(num) + ': ' + str(name) + '\n'
-        return display
+        print(display)
 
     def add_dev(self, email):
         self.dev.append(email)
