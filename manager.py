@@ -67,13 +67,13 @@ class Manager:
 
     @login_required
     def show_all_devs(self, args):
-        self.logger.info(f'user show all devs')
+        self.logger.info('user show all devs')
         for each in self.developers.values():
             print(each)
 
     @login_required
     def show_devs_tasks(self, args):
-        self.logger.info(f'user show all devs')
+        self.logger.info('user show all devs')
         for each in self.tasks.values():
             if each.executor == args.executor:
                 print(each)
@@ -83,18 +83,18 @@ class Manager:
         for each in self.tasks.values():
             if each.executor == args.executor and each.status == args.status:
                 print(each)
-        self.logger.info(f'user show devs tasks using status')
+        self.logger.info('user show devs tasks using status')
 
     @login_required
     def show_tasks_with_priority(self, args):
         for each in self.tasks.values():
             if each.executor == args.executor and each.status == args.priority:
                 print(each)
-        self.logger.info(f'user show devs tasks using priority')
+        self.logger.info('user show devs tasks using priority')
 
     @login_required
     def sort_dev_tasks_priority(self, args):
-        self.logger.info(f'user sort task by priority')
+        self.logger.info('user sort task by priority')
         print(self.developers[args.email].all_tasks.sort_priority_task())
 
     @login_required

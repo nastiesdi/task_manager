@@ -24,7 +24,7 @@ class Dev(MainClass):
             else:
                 raise ValueError('Passwords are not match')
         else:
-            raise Exception('Password is not valid')    # TODO
+            raise ValueError('Password is not valid')
         if is_valid_name(first_name):
             self.first_name = first_name
         else:
@@ -85,7 +85,7 @@ class Dev(MainClass):
         if isinstance(task, list):
             for t in task:
                 if t not in self.all_tasks:
-                    raise ValueError(f'developer hasn\'t task: {t} ')
+                    raise NameError(f'developer hasn\'t task: {t} ')
                 if t in self.task_to_do.tasks:
                     self.task_to_do.remove_task(t)
                 if t in self.task_in_progress.tasks:

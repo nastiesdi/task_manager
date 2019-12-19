@@ -2,11 +2,11 @@ import re
 
 
 def is_valid_email(email):
-    return bool(re.compile(r'^([0-9a-zA-Z]+@+[a-z]+.+[a-z])$').match(email))
+    return True if re.match(r'^([0-9a-zA-Z]+@+[a-z]+.+[a-z])$', email) else False
 
 
 def is_valid_password(password):
-    return bool(re.compile(r'^(?=.*[0-9].*)(?=.*[a-z].*)(?=.*[A-Z].*)[0-9a-zA-Z]{8,}$').match(password))
+    return True if re.match(r'^(?=.*[0-9].*)(?=.*[a-z].*)(?=.*[A-Z].*)[0-9a-zA-Z]{8,}$', password) else False
 
 
 def is_valid_age(age):
