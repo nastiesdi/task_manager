@@ -7,15 +7,6 @@ from helpers.checker import is_valid_email, is_valid_name, is_valid_password, is
 
 class Dev(MainClass):
     def __init__(self, email, password, repeat_password, first_name, last_name, age):
-        """
-        :param email: maska fff@hh.hh
-        :param password: cdcdcddcdc
-        :param repeat_password:
-        :param first_name:
-        :param last_name:
-        :param age: int
-        :param task:
-        """
         super().__init__()
         self.all_tasks = TaskList({})
         self.task_in_progress = TaskList({})
@@ -26,14 +17,14 @@ class Dev(MainClass):
         if is_valid_email(email):
             self.email = email
         else:
-            raise Exception('Email is not valid')
+            raise ValueError('Email is not valid')
         if is_valid_password(password):
             if password == repeat_password:
                 self.password = password
             else:
                 raise ValueError('Passwords are not match')
         else:
-            raise Exception('Password is not valid')
+            raise ValueError('Password is not valid')
         if is_valid_name(first_name):
             self.first_name = first_name
         else:
@@ -73,6 +64,7 @@ class Dev(MainClass):
             if self.password == old_password:
                 if new_password == repeat_new_password:
                     self.password = new_password
+                    print(self.password)
                 else:
                     raise ValueError('New password and repeat new password are not match')
             else:
@@ -92,6 +84,8 @@ class Dev(MainClass):
     def remove_tasks(self, task, is_deleted_at_all=False):
         if isinstance(task, list):
             for t in task:
+                if t not in self.all_tasks:
+                    raise NameError(f'developer hasn\'t task: {t} ')
                 if t in self.task_to_do.tasks:
                     self.task_to_do.remove_task(t)
                 if t in self.task_in_progress.tasks:
@@ -101,7 +95,6 @@ class Dev(MainClass):
                 if t in self.task_done.tasks:
                     self.task_done.remove_task(t)
         else:
-            print(task)
             if task in self.task_to_do.tasks:
                 self.task_to_do.remove_task(task)
             if task in self.task_in_progress.tasks:
@@ -112,7 +105,6 @@ class Dev(MainClass):
                 self.task_done.remove_task(task)
         if is_deleted_at_all:
             self.all_tasks.remove_task(task)
-            # del TASK_LIST[task.name]
 
     def set_in_progress(self, task):
         task.change_status_on_in_progress()
@@ -131,9 +123,9 @@ class Dev(MainClass):
         self.task_resolve.add_task(task)
 
     def set_done(self, task):
+        task.change_status_on_done()
         self.remove_tasks(task)
         self.task_done.add_task(task)
-        task.change_status_on_done()
 
     def set_to_do(self, task):
         if task.status == 'in progress':

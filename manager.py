@@ -6,8 +6,8 @@ from logger import _get_logger
 from src.dev import Dev
 from src.task import Task
 from src.project import Project
-from helpers.consts import FOLDER_NAME, FILE_NAME, LOG_FILE_NAME,STATUS_LIST
-
+from helpers.consts import FOLDER_NAME, FILE_NAME, LOG_FILE_NAME
+from helpers.decorators import login_required
 
 class Manager:
     def __init__(self, database_folder=None, users_file=None, cur_user_file=None, project_file=None, tasks_file=None,
@@ -29,6 +29,7 @@ class Manager:
         self.load_project()
         self.load_current_dev()
         self.load_devs()
+
 
     def registration(self, args):
         if args.email not in self.developers:
@@ -55,36 +56,48 @@ class Manager:
             self.logger.warning(f'User cant register/ Input data: email - {args.email}, password - {args.password} ')
             raise ValueError('Developer doesn\'t exist')
 
+    @login_required
     def change_password(self, args):
-        if not self.current_dev:
-            self.logger.warning(f'User is not loggin, please login')
-            raise ValueError('Please login!!!!!!!!!')
         self.current_dev.change_password(old_password=args.old_password, new_password=args.new_password,
                                          repeat_new_password=args.repeat_new_password)
+        self.developers[self.current_dev.email].change_password(old_password=args.old_password,
+                                                                new_password=args.new_password,
+                                                                repeat_new_password=args.repeat_new_password)
         self.logger.info(f'User {self.current_dev} with name {self.current_dev} change password on {args.new_password}')
 
+    @login_required
     def show_all_devs(self, args):
+        self.logger.info('user show all devs')
         for each in self.developers.values():
             print(each)
 
+    @login_required
     def show_devs_tasks(self, args):
+        self.logger.info('user show all devs')
         for each in self.tasks.values():
             if each.executor == args.executor:
                 print(each)
 
+    @login_required
     def show_devs_tasks_with_status(self, args):
         for each in self.tasks.values():
             if each.executor == args.executor and each.status == args.status:
                 print(each)
+        self.logger.info('user show devs tasks using status')
 
+    @login_required
     def show_tasks_with_priority(self, args):
         for each in self.tasks.values():
             if each.executor == args.executor and each.status == args.priority:
                 print(each)
+        self.logger.info('user show devs tasks using priority')
 
+    @login_required
     def sort_dev_tasks_priority(self, args):
+        self.logger.info('user sort task by priority')
         print(self.developers[args.email].all_tasks.sort_priority_task())
 
+    @login_required
     def create_task(self, args):
         task = Task(name=args.name,
                     priority=args.priority,
@@ -100,13 +113,14 @@ class Manager:
         if task.project:
             self.projects[task.project].add_task(task)
 
+    @login_required
     def change_task(self, args):
         if args.executor:
             old_executor = self.tasks[args.uid].executor
             if old_executor:
                 self.developers[old_executor].remove_tasks(args.uid)
             self.tasks[args.uid].executor = args.executor
-            self.developers[args.executor].add_task(args.uid)
+            self.developers[args.executor].add_task(self.tasks[args.uid])
             self.logger.info(f'Executor for task {args.uid} is changed from {old_executor if old_executor else "None" } '
                              f'to {args.executor}')
         if args.project:
@@ -124,12 +138,14 @@ class Manager:
             self.tasks[args.uid].status = args.status
             self.logger.info(f'Status for task {args.uid} is changed to {args.status}')
 
+    @login_required
     def add_sub_task(self, args):
         old_subtasks = self.tasks[args.task_uid].sub_tasks
         self.tasks[args.task_uid].add_sub_tasks(self.tasks[args.sub_task_uid])
         self.logger.info(f'To task {args.task_uid} was add sub_task. Old_subtask -  {old_subtasks}'
                          f'New sub_tasks {self.tasks[args.task_uid].sub_tasks}')
 
+    @login_required
     def set_status_in_progress(self, args):
         old_status = self.tasks[args.uid].status
         old_tracked_time = self.tasks[args.uid].trek_time
@@ -137,6 +153,7 @@ class Manager:
         self.logger.info(f'Status for task {args.uid} is changed from {old_status} to {self.tasks[args.uid].status}'
                          f'old trecked time - {old_tracked_time}, new - {self.tasks[args.uid].trek_time}')
 
+    @login_required
     def set_status_resolve(self, args):
         old_status = self.tasks[args.uid].status
         old_tracked_time = self.tasks[args.uid].trek_time
@@ -144,6 +161,7 @@ class Manager:
         self.logger.info(f'Status for task {args.uid} is changed from {old_status} to {self.tasks[args.uid].status}'
                          f' old trecked time - {old_tracked_time}, new - {self.tasks[args.uid].trek_time}')
 
+    @login_required
     def set_status_done(self, args):
         old_status = self.tasks[args.uid].status
         old_tracked_time = self.tasks[args.uid].trek_time
@@ -151,6 +169,7 @@ class Manager:
         self.logger.info(f'Status for task {args.uid} is changed from {old_status} to {self.tasks[args.uid].status}'
                          f' old trecked time - {old_tracked_time}, new - {self.tasks[args.uid].trek_time}')
 
+    @login_required
     def set_status_to_do(self, args):
         old_status = self.tasks[args.uid].status
         old_tracked_time = self.tasks[args.uid].trek_time
@@ -158,41 +177,67 @@ class Manager:
         self.logger.info(f'Status for task {args.uid} is changed from {old_status} to {self.tasks[args.uid].status}'
                          f' old trecked time - {old_tracked_time}, new - {self.tasks[args.uid].trek_time}')
 
+    @login_required
     def create_project(self, args):
-        project = Project(name=args.name, dev=args.dev, tasks=args.tasks)
+        project = Project(name=args.name, dev=args.dev)
+        if args.uid:
+            for each in args.uid:
+                project.add_task(self.tasks[each])
         self.projects[project.uid] = project
         self.logger.info(f'Project {project.uid} with name {project.name} was created ')
 
+    @login_required
     def show_all_task(self, args):
         for each in self.tasks.values():
             print(each)
 
+    @login_required
     def show_all_project(self, args):
         for each in self.projects.values():
             print(each)
 
-    def change_project(self, args):
-        pass
+    @login_required
+    def show_all_task_for_project(self, args):
+        for each in self.projects.values():
+            each.print_all_task()
 
+    @login_required
+    def rename_project(self, args):
+        self.projects[args.proj_uid].rename(args.new_name)
+
+    @login_required
     def add_task_to_dev(self, args):
-        self.developers[args.email].add_task(self.tasks[args.task_uid])
-        self.tasks[args.task_uid].executor = args.email
+        self.developers[args.email].add_task(self.tasks[args.uid])
+        self.tasks[args.uid].executor = args.email
         self.logger.info(f'Task {args.uid} is added to {args.email}')
 
+    @login_required
     def add_dev_to_project(self, args):
         self.projects[args.project_uid].dev = args.email
         self.developers[args.email] = args.project_uid
         self.logger.info(f'Task {args.uid} is added to project: {args.project_uid}')
 
-    def remove_task_from_dev(self, dev, task):
-        pass
+    @login_required
+    def remove_task_from_cur_dev(self, args):
+        if args.uid not in self.current_dev.all_tasks.tasks:
+            raise Exception(f'Curent user haven\'t task with uid {args.uid}')
+        self.current_dev.remove_tasks(args.uid, is_deleted_at_all=True)
+        self.developers[self.current_dev.email].remove_tasks(args.uid, is_deleted_at_all=True)
+        self.tasks[args.uid].executor = None
 
+    @login_required
     def show_subtask_for_task(self, args):
         self.logger.info(f'Show info about task {args.task_uid}: {self.tasks[args.task_uid]}')
         print(self.tasks[args.task_uid].show_sub_tasks())
 
-    def remove_subtask_task(self, task):
-        pass
+    @login_required
+    def remove_subtask(self, task_uid):
+        parent_task = None
+        for each in self.tasks.values():
+            if task_uid in each.sub_tasks:
+                parent_task = each
+                break
+        parent_task.remove_sub_task(task_uid)
 
     def load_devs(self):
         if os.path.exists(os.path.join(self.database_folder, self.users_file)):
@@ -237,5 +282,3 @@ class Manager:
     def save_projects(self):
         with open(os.path.join(self.database_folder, self.project_file), 'tw') as outfile:
             outfile.write(jsonpickle.encode(self.projects))
-
-# python main.py reg_user -e developer@hn -p 123456Qq -r 123456Qq -f sdsdc -l dasdasd -a 22
